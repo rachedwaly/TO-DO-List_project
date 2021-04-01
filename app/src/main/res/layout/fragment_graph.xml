@@ -12,4 +12,12 @@
         android:text="graph"
         android:textSize="30sp" />
 
+    <Button
+        android:id="@+id/add_btn_general"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="+"
+        android:layout_gravity="bottom|right"
+        />
+
 </FrameLayout>
