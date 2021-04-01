@@ -3,21 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
     android:orientation="horizontal">
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view10"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:hint="Select a preset"
             android:text="Presets" />
 
         <View
@@ -29,18 +25,16 @@
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/bg_spinner"
+            android:entries="@array/spinnerItemsPreset"/>
 
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view11"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,25 +51,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
             android:background="@drawable/bg_edittext"
-            android:hint="@string/name" />
+            android:ems="10"
+            android:hint="Choose a name"
+            android:inputType="textPersonName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view12"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:hint="Select a category"
             android:text="Category" />
 
         <View
@@ -87,22 +79,20 @@
             android:id="@+id/spinner2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/bg_spinner"
+            android:entries="@array/spinnerItemsCategory" />
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view13"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Due date:" />
+            android:text="Due date" />
 
         <View
             android:id="@+id/view6"
@@ -112,29 +102,25 @@
         <TextView
             android:id="@+id/due_date"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/textview_border"
-            android:gravity="center"
-            android:hint="@string/date" />
+            android:background="@drawable/bg_edittext"
+            android:fontFamily="sans-serif"
+            android:hint="@string/date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#919191" />
 
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <View
-            android:id="@+id/view14"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Due time:" />
+            android:text="Due time" />
 
         <View
             android:id="@+id/view7"
@@ -144,24 +130,18 @@
         <TextView
             android:id="@+id/due_time"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/textview_border"
-            android:gravity="center"
-            android:hint="@string/time" />
+            android:background="@drawable/bg_edittext"
+            android:hint="@string/time"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view15"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textView9"
@@ -181,17 +161,14 @@
             android:layout_weight="1"
             android:ems="10"
             android:gravity="start|top"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:background="@drawable/bg_edittext" />
     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <View
-            android:id="@+id/view16"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textView8"
@@ -208,8 +185,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:background="@drawable/textview_border">
+            android:background="@drawable/bg_edittext"
+            android:orientation="horizontal">
 
         </LinearLayout>
 
@@ -222,6 +199,17 @@
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_weight="0"
+            android:gravity="center"
+            android:text="Create"
+            app:backgroundTint="#A6A6A6" />
+    </TableRow>
 
 </TableLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinnerItemsPreset">
+        <item>Select a preset</item>
+        <item>Exams</item>
+        <item>Project</item>
+        <item>Meeting</item>
+    </string-array>
+
+    <string-array name="spinnerItemsCategory">
+        <item>Select a category</item>
+        <item>Sport</item>
+        <item>IGR203</item>
+        <item>INF224</item>
+    </string-array>
+</resources>
