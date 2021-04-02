@@ -8,8 +8,10 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -55,5 +57,17 @@ public class CreateActivity extends AppCompatActivity {
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment(dueTime);
         newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        TableRow addPreset = (TableRow) findViewById(R.id.addPreset);
+        if (checked) {
+            addPreset.setVisibility(View.VISIBLE);
+        } else {
+            addPreset.setVisibility(View.GONE);
+        }
     }
 }

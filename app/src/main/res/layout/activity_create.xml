@@ -1,318 +1,357 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:isScrollContainer="true"
-    android:orientation="horizontal">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="none"
+    android:layout_weight="1">
 
-    <TableRow
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:isScrollContainer="true"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Select a preset"
-            android:text="Presets" />
-
-        <View
-            android:id="@+id/view3"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_spinner"
-            android:entries="@array/spinnerItemsPreset" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name" />
-
-        <View
-            android:id="@+id/view4"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <EditText
-            android:id="@+id/editTextTextPersonName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_edittext"
-            android:ems="10"
-            android:hint="Choose a name"
-            android:inputType="textPersonName"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Select a category"
-            android:text="Category" />
-
-        <View
-            android:id="@+id/view5"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <Spinner
-            android:id="@+id/spinner2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_spinner"
-            android:entries="@array/spinnerItemsCategory" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Due date" />
-
-        <View
-            android:id="@+id/view6"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/due_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_edittext"
-            android:fontFamily="sans-serif"
-            android:hint="@string/date"
-            android:onClick="showDatePickerDialog"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#919191" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Due time" />
-
-        <View
-            android:id="@+id/view7"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/due_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/bg_edittext"
-            android:hint="@string/time"
-            android:onClick="showTimePickerDialog"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description" />
-
-        <View
-            android:id="@+id/view8"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <EditText
-            android:id="@+id/editTextTextMultiLine"
-            android:layout_width="match_parent"
-            android:layout_height="86dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_edittext"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Importance" />
-
-        <View
-            android:id="@+id/view10"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Effort: 1" />
+                android:hint="Select a preset"
+                android:text="Presets" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Urgency: 1" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Modify" />
-
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tags" />
-
-        <View
-            android:id="@+id/view9"
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <HorizontalScrollView
-            android:layout_width="10dp"
-            android:layout_height="match_parent">
-
-            <com.google.android.material.chip.ChipGroup
+            <View
+                android:id="@+id/view3"
                 android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_spinner"
+                android:entries="@array/spinnerItemsPreset" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name" />
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <EditText
+                android:id="@+id/editTextTextPersonName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="Choose a name"
+                android:inputType="textPersonName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Select a category"
+                android:text="Category" />
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_spinner"
+                android:entries="@array/spinnerItemsCategory" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Due date" />
+
+            <View
+                android:id="@+id/view6"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/due_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:fontFamily="sans-serif"
+                android:hint="@string/date"
+                android:onClick="showDatePickerDialog"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#919191" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Due time" />
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/due_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/time"
+                android:onClick="showTimePickerDialog"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description" />
+
+            <View
+                android:id="@+id/view8"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <EditText
+                android:id="@+id/editTextTextMultiLine"
+                android:layout_width="match_parent"
+                android:layout_height="86dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Importance" />
+
+            <View
+                android:id="@+id/view10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:isScrollContainer="true"
-                android:scrollbarAlwaysDrawHorizontalTrack="false"
-                android:scrollbarAlwaysDrawVerticalTrack="false"
-                android:scrollbars="vertical">
+                android:orientation="vertical">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip6"
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checkable="false"
-                    android:text="IGR"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    app:chipIconVisible="false"
-                    app:closeIconVisible="true" />
+                    android:text="Effort: 1" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip5"
+                <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="INF"
-                    app:closeIconVisible="true" />
+                    android:text="Urgency: 1" />
+            </LinearLayout>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="C++"
-                    app:closeIconVisible="true" />
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Modify" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="OpenGL"
-                    app:closeIconVisible="true" />
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags" />
+
+            <View
+                android:id="@+id/view9"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <HorizontalScrollView
+                android:layout_width="10dp"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:isScrollContainer="true"
+                    android:scrollbarAlwaysDrawHorizontalTrack="false"
+                    android:scrollbarAlwaysDrawVerticalTrack="false"
+                    android:scrollbars="vertical">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="false"
+                        android:text="IGR"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        app:chipIconVisible="false"
+                        app:closeIconVisible="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="INF"
+                        app:closeIconVisible="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="C++"
+                        app:closeIconVisible="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OpenGL"
+                        app:closeIconVisible="true" />
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
 
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_add" />
-    </TableRow>
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_menu_add" />
+        </TableRow>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_span="3"
-            android:text="Do you want to make this task as a preset?" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_span="3"
+                android:text="Do you want to make this task as a preset?" />
 
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxClicked"/>
 
-    </TableRow>
+        </TableRow>
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+        <TableRow
+            android:id="@+id/addPreset"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:visibility="gone">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Create" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preset name" />
 
-    </TableRow>
+            <View
+                android:id="@+id/view"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
 
-</TableLayout>
+            <EditText
+                android:id="@+id/editTextTextPersonName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext"
+                android:ems="10"
+                android:hint="Choose a name for the preset"
+                android:inputType="textPersonName"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Create" />
+
+        </TableRow>
+
+    </TableLayout>
+</ScrollView>
