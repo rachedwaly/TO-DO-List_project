@@ -1,9 +1,14 @@
 package com.example.myapplication;
 
+import android.content.ClipData;
+import android.graphics.Rect;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +23,54 @@ import java.util.ArrayList;
  * Use the {@link Main#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+//class for spacing the cards withing the gridlayout
+class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+    private int spanCount;
+    private int spacing;
+    private boolean includeEdge;
+    private int headerNum;
+
+    public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge, int headerNum) {
+        this.spanCount = spanCount;
+        this.spacing = spacing;
+        this.includeEdge = includeEdge;
+        this.headerNum = headerNum;
+    }
+
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        int position = parent.getChildAdapterPosition(view) - headerNum; // item position
+
+        if (position >= 0) {
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        } else {
+            outRect.left = 0;
+            outRect.right = 0;
+            outRect.top = 0;
+            outRect.bottom = 0;
+        }
+    }
+}
+
+
 public class Main extends Fragment {
     private ArrayList<Card> cardList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -62,8 +115,10 @@ public class Main extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        cardList.add(new Card("Line 1", "Line 2"));
+        cardList.add(new Card("Line 1hjgjgjgjgjjjgjgj", "Line 2jhfhjfjgjgjgjgjgjgj"));
         cardList.add(new Card("Line 3", "Line 4"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
         cardList.add(new Card("Line 5", "Line 6"));
 
 
@@ -76,12 +131,20 @@ public class Main extends Fragment {
 
 
         mRecyclerView = getView().findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        //mRecyclerView.setHasFixedSize(true);
+        //mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new GridLayoutManager(getActivity(),2);
+
+
         mAdapter = new AdapterForCards(cardList);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 25, true, 0));
+
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
     }
 
     @Override
@@ -90,4 +153,20 @@ public class Main extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP|ItemTouchHelper.DOWN|
+            ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT,0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            viewHolder.itemView.setBackgroundColor(1);
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
 }
+
