@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 public class Task {
@@ -110,8 +112,16 @@ public class Task {
     @Override
     public String toString() {
         return "Task {" +
-                "preset=" + preset +
-                "name='" + name + '\'' +
+                "preset='" + preset + "', " +
+                "name='" + name + "', " +
+                "category='" + category + "', " +
+                "due date='" + dueDate + "', " +
+                "due time='" + dueTime + "', " +
+                "description='" + description + "', " +
+                "effort=" + effort + ", " +
+                "urgency=" + urgency + ", " +
+                "tags=" + Arrays.toString(tags) + ", " +
+                "calendar=" + calendar +
                 '}';
     }
 }

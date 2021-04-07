@@ -125,6 +125,7 @@ public class CreateActivity extends AppCompatActivity {
         newPresetName = (EditText) findViewById(R.id.newPresetName);
     }
 
+    // Remove from this file after linking with main activity
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeJSONTasks() {
         taskFile = new File(this.getFilesDir(), "tasks.json");
@@ -149,7 +150,7 @@ public class CreateActivity extends AppCompatActivity {
             Task newTask1 = new Task("Exam", "My exam", "IGR203", "06-07-2021",
                     "12:13", "My description", 3, 1, new String[]{"exam", "igr203"}, true);
             Task newTask2 = new Task("Meeting", "My meeting", "IGR203", "20-04-2021",
-                    "16:00", "My description", 1, 4, new String[]{"meeting", "igr203"}, true);
+                    "16:00", "My description", 1, 4, new String[]{"meeting", "igr203"}, false);
             Task newTask3 = new Task("Project", "My project", "IGR203", "03-05-2021",
                     "23:59", "My description", 4, 4, new String[]{"project", "igr203"}, true);
 
