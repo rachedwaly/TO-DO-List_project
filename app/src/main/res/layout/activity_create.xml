@@ -321,7 +321,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_span="3"
-                android:text="Do you want to make this task as a preset?" />
+                android:text="Do you want to make this task as a preset? (category, importance, tags)" />
 
             <CheckBox
                 android:id="@+id/newPreset"
