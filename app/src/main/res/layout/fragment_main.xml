@@ -6,30 +6,26 @@
     tools:context=".Main">
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/recycleFab"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/delete"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"
-        android:padding="5dp"
-        android:scrollbars="vertical"
-        />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-
-        android:layout_width="32dp"
-        android:layout_height="44dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="end|bottom"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="672dp"
-        android:layout_marginBottom="24dp"
-        android:src="@drawable/delete" />
+        android:background="@android:color/darker_gray"
+        android:paddingBottom="0dp"
+        android:scrollbars="vertical"
+        android:clipToPadding="false"/>
 
 
 </RelativeLayout>
