@@ -31,7 +31,7 @@
                 android:layout_height="match_parent" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/presets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -56,7 +56,7 @@
                 android:layout_height="match_parent" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -85,7 +85,7 @@
                 android:layout_height="match_parent" />
 
             <Spinner
-                android:id="@+id/spinner2"
+                android:id="@+id/category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -166,7 +166,7 @@
                 android:layout_height="match_parent" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="86dp"
                 android:layout_weight="1"
@@ -194,18 +194,19 @@
                 android:layout_height="match_parent" />
 
             <LinearLayout
+                android:id="@+id/importance"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/effort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Effort: 1" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/urgency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Urgency: 1" />
@@ -240,6 +241,7 @@
                 android:layout_height="match_parent">
 
                 <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tags"
                     android:layout_width="10dp"
                     android:layout_height="match_parent"
                     android:isScrollContainer="true"
@@ -296,16 +298,36 @@
 
             <TextView
                 android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_span="3"
+                android:inputType="textMultiLine"
+                android:text="Add slots for this task in the calendar? (depending on effort and urgency)" />
+
+            <CheckBox
+                android:id="@+id/calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_span="3"
                 android:text="Do you want to make this task as a preset?" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/newPreset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onCheckboxClicked"/>
+                android:onClick="onPresetCheckboxClicked"/>
 
         </TableRow>
 
@@ -328,7 +350,7 @@
                 android:layout_height="match_parent" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
+                android:id="@+id/newPresetName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -349,7 +371,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Create" />
+                android:text="Create"
+                android:onClick="onCreateClicked"/>
 
         </TableRow>
 
