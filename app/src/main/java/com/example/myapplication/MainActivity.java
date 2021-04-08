@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -37,21 +40,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Setup navigation
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        ViewPager2 viewPager = (ViewPager2) findViewById(R.id.pager);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this);
         viewPager.setAdapter(myPagerAdapter);
+        viewPager.setUserInputEnabled(false);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        // Deactivating changing menus by swiping
-        viewPager.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    if (position == 0)   {tab.setText("Calendar");}
+                    if (position == 1)   {tab.setText("Main");}
+                    if (position == 2)   {tab.setText("Graph");}
+                }).attach();
 
         initializeJSONTasks();
     }
