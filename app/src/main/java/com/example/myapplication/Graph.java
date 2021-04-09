@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Graph#newInstance} factory method to
@@ -35,6 +37,9 @@ public class Graph extends Fragment {
 
 
     //smt i did
+    private ArrayList<String> data_name = new ArrayList<String>();
+    private ArrayList<Integer> data_effort = new ArrayList<>();
+    private ArrayList<Integer> data_urgent = new ArrayList<>();
     private View myFragmentView;
     private RelativeLayout llTouch;//llTouch --> 绘图区域
     private LinearLayout popup;
@@ -84,6 +89,13 @@ public class Graph extends Fragment {
         return myFragmentView;
     }
 
+    private void readData(){
+        for(int i = 0 ; i < data_effort.size(); i++){
+            createTask(data_effort.get(i), data_urgent.get(i));
+        }
+
+    }
+
     private void init() {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
@@ -129,6 +141,18 @@ public class Graph extends Fragment {
                 showAddPopup();
             }
         });
+
+
+        data_name.add("task1a");
+        data_name.add("task2a");
+        data_name.add("task3a");
+        data_effort.add(4);
+        data_effort.add(1);
+        data_effort.add(5);
+        data_urgent.add(3);
+        data_urgent.add(1);
+        data_urgent.add(1);
+        readData();
     }
 
     private View.OnTouchListener movingEventListener = new View.OnTouchListener() {
@@ -181,7 +205,7 @@ public class Graph extends Fragment {
                 case MotionEvent.ACTION_UP:
 //                    Log.d("selectedview", String.valueOf(selectedView.getId()));
 
-                    taskname.setText();
+                    taskname.setText(data_name.get(v.getId()));
                     int effort = Math.round(lastX / 100);
                     int urgent = Math.round(1500 - lastY)/100;
                     taskeffort.setText("Effort: " + effort);
@@ -215,7 +239,11 @@ public class Graph extends Fragment {
 
     private void createTask(float x, float y) {
         ImageView iv = new ImageView(getActivity());
-        iv.setImageResource(R.drawable.task1);
+        switch (index % 3){
+            case 0 : iv.setImageResource(R.drawable.task1); break;
+            case 1 : iv.setImageResource(R.drawable.task2); break;
+            case 2 : iv.setImageResource(R.drawable.task3); break;
+        }
         iv.setId(index++);
         int left = Math.round(x * 50);
         int bottom = Math.round(y * 50);
