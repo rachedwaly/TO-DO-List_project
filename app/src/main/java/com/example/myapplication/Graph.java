@@ -38,6 +38,7 @@ public class Graph extends Fragment {
     private View myFragmentView;
     private RelativeLayout llTouch;//llTouch --> 绘图区域
     private LinearLayout popup;
+    private TextView taskname, taskeffort, taskurgent;
     private int index = 0;
     private int screenWidth;
     private int screenHeight;
@@ -90,6 +91,9 @@ public class Graph extends Fragment {
 
         popup = (LinearLayout) myFragmentView.findViewById(R.id.popup);
         llTouch = (RelativeLayout) myFragmentView.findViewById(R.id.ll_touch);
+        taskname = (TextView) myFragmentView.findViewById(R.id.taskname);
+        taskeffort = (TextView) myFragmentView.findViewById(R.id.taskeffort);
+        taskurgent = (TextView) myFragmentView.findViewById(R.id.taskurgent);
 
         int count = llTouch.getChildCount();
         for(int i= 0; i < count; i++){
@@ -176,9 +180,17 @@ public class Graph extends Fragment {
                     break;
                 case MotionEvent.ACTION_UP:
 //                    Log.d("selectedview", String.valueOf(selectedView.getId()));
-                    Log.d("x", String.valueOf(lastX));
-                    Log.d("y", String.valueOf(lastY));
+
+                    taskname.setText();
+                    int effort = Math.round(lastX / 100);
+                    int urgent = Math.round(1500 - lastY)/100;
+                    taskeffort.setText("Effort: " + effort);
+                    taskurgent.setText("Urgent: "  + urgent);
+                    Log.d("x", String.valueOf(effort));
+                    Log.d("y", String.valueOf(urgent));
                     v = null;
+
+
 
 //                    //检测移动的距离，如果很微小可以认为是点击事件
 //                    if (Math.abs(event.getRawX() - x) < 10 && Math.abs(event.getRawY() - y) < 10) {

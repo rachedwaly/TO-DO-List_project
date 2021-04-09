@@ -7,16 +7,40 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/taksinfo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="graph"
-        android:textSize="30sp" />
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/taskname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" />
+        <TextView
+            android:id="@+id/taskeffort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Effort: " />
+        <TextView
+            android:id="@+id/taskurgent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Urgent: " />
+    </LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        >
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Urgent"
+            android:textSize="30sp" />
         <View
             android:layout_width="2dp"
             android:layout_height="500dp"
@@ -53,12 +77,19 @@
                 android:layout_marginTop="150dp"></ImageView>
         </RelativeLayout>
         <View
+            android:id="@+id/effort_line"
             android:layout_width="500dp"
             android:layout_height="5px"
             android:background="#000000"
             android:layout_below="@id/ll_touch"
             android:layout_marginTop="20dp"
             />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Effort"
+            android:textSize="30sp"
+            android:layout_toLeftOf="@id/effort_line"/>
 
         <LinearLayout
             android:id="@+id/popup"
