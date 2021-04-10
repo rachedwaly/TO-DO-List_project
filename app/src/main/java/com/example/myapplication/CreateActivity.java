@@ -94,6 +94,12 @@ public class CreateActivity extends AppCompatActivity {
         //Initialize display regarding the given task (new task or modifying a task?)
         // TODO
 
+        String[] presetArray = {"No preset", "Exam", "Project", "Meeting"};
+        ArrayList<String> presetList = new ArrayList<String>(Arrays.asList(presetArray));
+        ArrayAdapter<String> presetAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, presetList);
+        presetAdapter.setNotifyOnChange(true);
+        preset.setAdapter(presetAdapter);
         preset.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -125,6 +131,12 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        String[] categoryArray = {"No category", "Exam", "Project", "Meeting", "New category"};
+        ArrayList<String> categoryList = new ArrayList<String>(Arrays.asList(categoryArray));
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, categoryList);
+        categoryAdapter.setNotifyOnChange(true);
+        category.setAdapter(categoryAdapter);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -175,7 +187,8 @@ public class CreateActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert JSON string to Book object
-            tasks = Arrays.asList(gson.fromJson(reader, Task[].class));
+            tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
+            //tasks = Arrays.asList(gson.fromJson(reader, Task[].class));
 
             // print book
             tasks.forEach(System.out::println);
@@ -199,7 +212,8 @@ public class CreateActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert JSON string to Book object
-            presets = Arrays.asList(gson.fromJson(reader, Preset[].class));
+            presets = new ArrayList<Preset>(Arrays.asList(gson.fromJson(reader, Preset[].class)));
+            //presets = Arrays.asList(gson.fromJson(reader, Preset[].class));
 
             // print book
             presets.forEach(System.out::println);
@@ -241,7 +255,7 @@ public class CreateActivity extends AppCompatActivity {
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021",
                     "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
 
-            List<Task> tasks = Arrays.asList(newTask1, newTask2, newTask3);
+            List<Task> newTasks = Arrays.asList(newTask1, newTask2, newTask3);
 
             Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
 
@@ -249,7 +263,7 @@ public class CreateActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert user object to JSON file
-            gson.toJson(tasks, writer);
+            gson.toJson(newTasks, writer);
 
             // close writer
             writer.close();
@@ -286,7 +300,7 @@ public class CreateActivity extends AppCompatActivity {
             Preset newPreset2 = new Preset("Project", "Project", 4, 2, new String[]{"project", "hard"}, true);
             Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new String[]{"meeting"}, false);
 
-            List<Preset> presets = Arrays.asList(newPreset1, newPreset2, newPreset3);
+            List<Preset> newPresets = Arrays.asList(newPreset1, newPreset2, newPreset3);
 
             Writer writer = Files.newBufferedWriter(Paths.get(presetFile.getPath()));
 
@@ -294,7 +308,7 @@ public class CreateActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert user object to JSON file
-            gson.toJson(presets, writer);
+            gson.toJson(newPresets, writer);
 
             // close writer
             writer.close();
@@ -366,11 +380,15 @@ public class CreateActivity extends AppCompatActivity {
         if (category.getSelectedItem().toString().equals("New category")) {
             EditText newCategory = (EditText) findViewById(R.id.newCategoryName);
             ArrayAdapter categoryAdapter = (ArrayAdapter) category.getAdapter();
-            categoryAdapter.add(newCategory.getText().toString());
+            categoryAdapter.insert(newCategory.getText().toString(), 1);
         }
 
         // Add the preset if needed
         if (newPreset.isChecked()) {
+            // Add in the spinner
+            ArrayAdapter presetAdapter = (ArrayAdapter) preset.getAdapter();
+            presetAdapter.add(newPresetName.getText().toString());
+
             // Create the preset
             String c = category.getSelectedItem().toString(); // Category name
             if (c.equals("New category")) {
