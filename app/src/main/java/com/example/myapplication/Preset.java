@@ -1,45 +1,27 @@
 package com.example.myapplication;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.List;
 
-public class Task {
+public class Preset {
     static int ID_COUNT = 0;
 
     int id;
-    String preset;
     String name;
     String category;
-    String dueDate;
-    String dueTime;
-    String description;
     int effort;
     int urgency;
     String[] tags;
     boolean calendar;
 
-    public Task(String preset, String name, String category, String dueDate, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
+    public Preset(String name, String category, int effort, int urgency, String[] tags, boolean calendar) {
         this.id = ID_COUNT;
         ID_COUNT += 1;
-        this.preset = preset;
         this.name = name;
         this.category = category;
-        this.dueDate = dueDate;
-        this.dueTime = dueTime;
-        this.description = description;
         this.effort = effort;
         this.urgency = urgency;
         this.tags = tags;
         this.calendar = calendar;
-    }
-
-    public String getPreset() {
-        return this.preset;
-    }
-
-    public void setPreset(String preset) {
-        this.preset = preset;
     }
 
     public void setName(String name) {
@@ -48,18 +30,6 @@ public class Task {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public void setDueTime(String dueTime) {
-        this.dueTime = dueTime;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setEffort(int effort) {
@@ -74,8 +44,8 @@ public class Task {
         this.tags = tags;
     }
 
-    public void setCalendar(boolean calendar) {
-        this.calendar = calendar;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -84,18 +54,6 @@ public class Task {
 
     public String getCategory() {
         return category;
-    }
-
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public String getDueTime() {
-        return dueTime;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public int getEffort() {
@@ -110,24 +68,20 @@ public class Task {
         return tags;
     }
 
+    public void setCalendar(boolean calendar) {
+        this.calendar = calendar;
+    }
+
     public boolean isCalendar() {
         return calendar;
     }
 
-    public int getId() {
-        return id;
-    }
-
     @Override
     public String toString() {
-        return "Task {" +
+        return "Preset {" +
                 "id=" + id + ", " +
-                "preset='" + preset + "', " +
                 "name='" + name + "', " +
                 "category='" + category + "', " +
-                "due date='" + dueDate + "', " +
-                "due time='" + dueTime + "', " +
-                "description='" + description + "', " +
                 "effort=" + effort + ", " +
                 "urgency=" + urgency + ", " +
                 "tags=" + Arrays.toString(tags) + ", " +

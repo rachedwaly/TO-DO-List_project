@@ -29,6 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private File taskFile;
+    private File presetFile;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initializeJSONTasks();
+        initializeJSONPresets();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -77,12 +79,13 @@ public class MainActivity extends AppCompatActivity {
             Log.d("path 2", taskFile.getAbsolutePath());
 
             // add premade tasks
-            Task newTask1 = new Task("Exam", "My exam", "IGR203", "06-07-2021",
-                    "12:13", "My description", 3, 1, new String[]{"exam", "igr203"}, true);
-            Task newTask2 = new Task("Meeting", "My meeting", "IGR203", "20-04-2021",
-                    "16:00", "My description", 1, 4, new String[]{"meeting", "igr203"}, false);
-            Task newTask3 = new Task("Project", "My project", "IGR203", "03-05-2021",
-                    "23:59", "My description", 4, 4, new String[]{"project", "igr203"}, true);
+            Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021",
+                    "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
+            Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021",
+                    "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
+            Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021",
+                    "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
+
 
             List<Task> tasks = Arrays.asList(newTask1, newTask2, newTask3);
 
@@ -93,6 +96,50 @@ public class MainActivity extends AppCompatActivity {
 
             // convert user object to JSON file
             gson.toJson(tasks, writer);
+
+            // close writer
+            writer.close();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void initializeJSONPresets() {
+        presetFile = new File(this.getFilesDir(), "presets.json");
+        Log.d("path", presetFile.getAbsolutePath());
+
+        FileWriter fileWriter = null;
+
+        if (!presetFile.exists()) {
+            Log.d("presetFile", "created");
+            try {
+                presetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            fileWriter = new FileWriter(presetFile.getAbsoluteFile());
+            Log.d("path 2", presetFile.getAbsolutePath());
+
+            // add premade presets
+            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new String[]{"exam", "urgent"}, true);
+            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new String[]{"project", "hard"}, true);
+            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new String[]{"meeting"}, false);
+
+            List<Preset> presets = Arrays.asList(newPreset1, newPreset2, newPreset3);
+
+            Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
+
+            // create Gson instance
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            // convert user object to JSON file
+            gson.toJson(presets, writer);
 
             // close writer
             writer.close();
