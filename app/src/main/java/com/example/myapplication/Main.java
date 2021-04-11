@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -89,6 +90,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mRecycleBinButton;
+    private FloatingActionButton mAddTaskButton;
     private Card cardToDelete;
     private int newContactPosition = -1;
     // TODO: Rename parameter arguments, choose names that match
@@ -147,6 +149,14 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+
+        mAddTaskButton=getView().findViewById(R.id.createTask);
+        mAddTaskButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openAddTaskActivity();
+            }
+        });
+
 
         mRecycleBinButton=getView().findViewById(R.id.recycleFab);
         mRecyclerView = getView().findViewById(R.id.recyclerView);
@@ -240,6 +250,9 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
         cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
 
+    }
+    public void openAddTaskActivity() {
+        startActivity(new Intent(getActivity(), CreateActivity.class));
     }
 
 
