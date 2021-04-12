@@ -1,8 +1,9 @@
 package com.example.myapplication;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Preset {
+public class Preset implements Serializable {
     static int ID_COUNT = 0;
 
     int id;

@@ -1,10 +1,11 @@
 package com.example.myapplication;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task {
+public class Task implements Serializable {
     static int ID_COUNT = 0;
 
     int id;
@@ -18,6 +19,21 @@ public class Task {
     int urgency;
     String[] tags;
     boolean calendar;
+
+    public Task() {
+        this.id = ID_COUNT;
+        ID_COUNT += 1;
+        this.preset = "No preset";
+        this.name = "";
+        this.category = "No category";
+        this.dueDate = "";
+        this.dueTime = "";
+        this.description = "";
+        this.effort = 1;
+        this.urgency = 1;
+        this.tags = new String[0];
+        this.calendar = false;
+    }
 
     public Task(String preset, String name, String category, String dueDate, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
         this.id = ID_COUNT;

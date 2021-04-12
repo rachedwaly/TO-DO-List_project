@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private File taskFile;
     private File presetFile;
+    private ArrayList<String> categories;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -37,9 +39,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeJSONTasks();
+        initializeJSONPresets();
+
+        categories = new ArrayList<String>();
+        categories.add("No category");
+        categories.add("Exam");
+        categories.add("Project");
+        categories.add("Meeting");
+        categories.add("New category");
+
         // Setup navigation
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+        Log.d("Send task path", taskFile.getAbsolutePath().toString());
+        Log.d("Send preset path", presetFile.getAbsolutePath().toString());
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), taskFile.getAbsolutePath().toString(), presetFile.getAbsolutePath().toString(), categories);
         viewPager.setAdapter(myPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
@@ -53,15 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        initializeJSONTasks();
-        initializeJSONPresets();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeJSONTasks() {
         taskFile = new File(this.getFilesDir(), "tasks.json");
-        Log.d("path", taskFile.getAbsolutePath());
+        Log.d("Task File Path", taskFile.getAbsolutePath());
 
         FileWriter fileWriter = null;
 
@@ -76,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             fileWriter = new FileWriter(taskFile.getAbsoluteFile());
-            Log.d("path 2", taskFile.getAbsolutePath());
 
             // add premade tasks
             Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021",
@@ -109,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeJSONPresets() {
         presetFile = new File(this.getFilesDir(), "presets.json");
-        Log.d("path", presetFile.getAbsolutePath());
+        Log.d("Preset File Path", presetFile.getAbsolutePath());
 
         FileWriter fileWriter = null;
 
@@ -124,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             fileWriter = new FileWriter(presetFile.getAbsoluteFile());
-            Log.d("path 2", presetFile.getAbsolutePath());
 
             // add premade presets
             Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new String[]{"exam", "urgent"}, true);
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<Preset> presets = Arrays.asList(newPreset1, newPreset2, newPreset3);
 
-            Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
+            Writer writer = Files.newBufferedWriter(Paths.get(presetFile.getPath()));
 
             // create Gson instance
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

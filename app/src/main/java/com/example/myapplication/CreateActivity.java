@@ -67,11 +67,16 @@ public class CreateActivity extends AppCompatActivity {
 
     private SimpleDateFormat dateFormatter;
 
-    private File taskFile;
+    private String taskFilePath;
     private List<Task> tasks;
 
-    private File presetFile;
+    private String presetFilePath;
     private List<Preset> presets;
+
+    private Task currentTask;
+
+
+    private ArrayList<String> categories;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -84,18 +89,36 @@ public class CreateActivity extends AppCompatActivity {
 
         findViewsById();
 
-        // Remove from this file after linking with main activity
-        initializeJSONTasks();
-        initializeJSONPresets();
-
+        taskFilePath = getIntent().getStringExtra("tasksPath");
+        Log.d("CreateActivity task", taskFilePath);
         readTasks();
+
+        presetFilePath = getIntent().getStringExtra("presetsPath");
+        Log.d("CreateActivity preset", presetFilePath);
         readPresets();
+
+        currentTask = (Task) getIntent().getSerializableExtra("task");
+
+        Boolean isNew = true;
+        for (Task task : tasks) {
+            if (task.getId() == currentTask.getId()) {
+                isNew = false;
+                //currentTask = task;
+            }
+        }
+
+        if (isNew) {
+            tasks.add(currentTask);
+        }
 
         //Initialize display regarding the given task (new task or modifying a task?)
         // TODO
 
-        String[] presetArray = {"No preset", "Exam", "Project", "Meeting"};
-        ArrayList<String> presetList = new ArrayList<String>(Arrays.asList(presetArray));
+        ArrayList<String> presetList = new ArrayList<String>();
+        presetList.add("No preset");
+        for (Preset preset : presets) {
+            presetList.add(preset.getName());
+        }
         ArrayAdapter<String> presetAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, presetList);
         presetAdapter.setNotifyOnChange(true);
@@ -131,10 +154,9 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        String[] categoryArray = {"No category", "Exam", "Project", "Meeting", "New category"};
-        ArrayList<String> categoryList = new ArrayList<String>(Arrays.asList(categoryArray));
+        categories = (ArrayList<String>) getIntent().getSerializableExtra("categories");
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, categoryList);
+                android.R.layout.simple_list_item_1, categories);
         categoryAdapter.setNotifyOnChange(true);
         category.setAdapter(categoryAdapter);
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,14 +203,13 @@ public class CreateActivity extends AppCompatActivity {
         Reader reader = null;
         try {
             Log.d("Read", "try");
-            reader = Files.newBufferedReader(Paths.get(taskFile.getPath()));
+            reader = Files.newBufferedReader(Paths.get(taskFilePath));
 
             // create Gson instance
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert JSON string to Book object
             tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
-            //tasks = Arrays.asList(gson.fromJson(reader, Task[].class));
 
             // print book
             tasks.forEach(System.out::println);
@@ -206,114 +227,19 @@ public class CreateActivity extends AppCompatActivity {
         Reader reader = null;
         try {
             Log.d("Read", "try");
-            reader = Files.newBufferedReader(Paths.get(presetFile.getPath()));
+            reader = Files.newBufferedReader(Paths.get(presetFilePath));
 
             // create Gson instance
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert JSON string to Book object
             presets = new ArrayList<Preset>(Arrays.asList(gson.fromJson(reader, Preset[].class)));
-            //presets = Arrays.asList(gson.fromJson(reader, Preset[].class));
 
             // print book
             presets.forEach(System.out::println);
 
             // close reader
             reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // Remove from this file after linking with main activity
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initializeJSONTasks() {
-        taskFile = new File(this.getFilesDir(), "tasks.json");
-        Log.d("path", taskFile.getAbsolutePath());
-
-        FileWriter fileWriter = null;
-
-        if (!taskFile.exists()) {
-            Log.d("taskFile", "created");
-            try {
-                taskFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            fileWriter = new FileWriter(taskFile.getAbsoluteFile());
-            Log.d("path 2", taskFile.getAbsolutePath());
-
-            // add premade tasks
-            Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021",
-                    "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
-            Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021",
-                    "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
-            Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021",
-                    "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
-
-            List<Task> newTasks = Arrays.asList(newTask1, newTask2, newTask3);
-
-            Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
-
-            // create Gson instance
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            // convert user object to JSON file
-            gson.toJson(newTasks, writer);
-
-            // close writer
-            writer.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Remove from this file after linking with main activity
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initializeJSONPresets() {
-        presetFile = new File(this.getFilesDir(), "presets.json");
-        Log.d("path", presetFile.getAbsolutePath());
-
-        FileWriter fileWriter = null;
-
-        if (!presetFile.exists()) {
-            Log.d("presetFile", "created");
-            try {
-                presetFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            fileWriter = new FileWriter(presetFile.getAbsoluteFile());
-            Log.d("path 2", presetFile.getAbsolutePath());
-
-            // add premade presets
-            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new String[]{"exam", "urgent"}, true);
-            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new String[]{"project", "hard"}, true);
-            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new String[]{"meeting"}, false);
-
-            List<Preset> newPresets = Arrays.asList(newPreset1, newPreset2, newPreset3);
-
-            Writer writer = Files.newBufferedWriter(Paths.get(presetFile.getPath()));
-
-            // create Gson instance
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            // convert user object to JSON file
-            gson.toJson(newPresets, writer);
-
-            // close writer
-            writer.close();
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -352,10 +278,16 @@ public class CreateActivity extends AppCompatActivity {
 
         // Adapt --> you receive a task and actualize it
         // TODO
-        Task newTask = new Task(selectedPreset, name.getText().toString(), selectedCategory, dueDate.getText().toString(),
-                dueTime.getText().toString(), description.getText().toString(), Integer.parseInt(effortText), Integer.parseInt(urgencyText), new String[0], calendar.isChecked());
-
-        tasks.add(newTask);
+        currentTask.setPreset(selectedPreset);
+        currentTask.setName(name.getText().toString());
+        currentTask.setCategory(selectedCategory);
+        currentTask.setDueDate(dueDate.getText().toString());
+        currentTask.setDueTime(dueTime.getText().toString());
+        currentTask.setDescription(description.getText().toString());
+        currentTask.setEffort(Integer.parseInt(effortText));
+        currentTask.setUrgency(Integer.parseInt(urgencyText));
+        currentTask.setTags(new String[0]);
+        currentTask.setCalendar(calendar.isChecked());
 
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -365,7 +297,7 @@ public class CreateActivity extends AppCompatActivity {
         try {
             Log.d("Write", "Add/Modify the new task in the JSON file");
 
-            writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
+            writer = Files.newBufferedWriter(Paths.get(taskFilePath));
 
             // convert user object to JSON file
             gson.toJson(tasks, writer);
@@ -402,7 +334,7 @@ public class CreateActivity extends AppCompatActivity {
 
             try {
                 Log.d("Write", "Add the new preset in the JSON file");
-                writer = Files.newBufferedWriter(Paths.get(presetFile.getPath()));
+                writer = Files.newBufferedWriter(Paths.get(presetFilePath));
 
                 // convert user object to JSON file
                 gson.toJson(presets, writer);
@@ -419,7 +351,7 @@ public class CreateActivity extends AppCompatActivity {
         Reader reader = null;
         try {
             Log.d("Read", "Read tasks file");
-            reader = Files.newBufferedReader(Paths.get(taskFile.getPath()));
+            reader = Files.newBufferedReader(Paths.get(taskFilePath));
 
             // convert JSON string to Book object
             List<Task> readTasks = Arrays.asList(gson.fromJson(reader, Task[].class));
@@ -428,7 +360,7 @@ public class CreateActivity extends AppCompatActivity {
             readTasks.forEach(System.out::println);
 
             Log.d("Read", "Read presets file");
-            reader = Files.newBufferedReader(Paths.get(presetFile.getPath()));
+            reader = Files.newBufferedReader(Paths.get(presetFilePath));
 
             // convert JSON string to Book object
             List<Preset> readPresets = Arrays.asList(gson.fromJson(reader, Preset[].class));
@@ -442,6 +374,6 @@ public class CreateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //finish();
+        finish();
     }
 }
