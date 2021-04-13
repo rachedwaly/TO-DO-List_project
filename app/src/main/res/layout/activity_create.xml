@@ -153,6 +153,34 @@
         </TableRow>
 
         <TableRow
+            android:id="@+id/repeatRow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            tools:visibility="gone">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repeat the task" />
+
+            <View
+                android:id="@+id/view11"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <Spinner
+                android:id="@+id/repeater"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:layout_weight="1"
+                android:background="@drawable/bg_spinner" />
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp">
@@ -203,6 +231,7 @@
                 android:background="@drawable/bg_edittext"
                 android:ems="10"
                 android:gravity="start|top"
+                android:hint="Enter a description"
                 android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
         </TableRow>
@@ -279,7 +308,7 @@
                     android:scrollbarAlwaysDrawVerticalTrack="false"
                     android:scrollbars="vertical">
 
-                    <com.google.android.material.chip.Chip
+                    <!-- <com.google.android.material.chip.Chip
                         android:id="@+id/chip6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -308,7 +337,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OpenGL"
-                        app:closeIconVisible="true" />
+                        app:closeIconVisible="true" /> -->
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
@@ -332,7 +361,7 @@
                 android:layout_height="match_parent"
                 android:layout_span="3"
                 android:inputType="textMultiLine"
-                android:text="Add slots for this task in the calendar? (depending on effort and urgency)" />
+                android:text="Add slots for this task in the calendar? (depending on effort, urgency, due date and time)" />
 
             <CheckBox
                 android:id="@+id/calendar"

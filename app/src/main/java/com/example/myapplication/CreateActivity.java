@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +55,9 @@ public class CreateActivity extends AppCompatActivity {
     private Spinner category;
     private String selectedCategory;
     private TextView dueDate;
+    private TableRow repeaterRow;
+    private Spinner repeater;
+    private String selectedRepeater;
     private TextView dueTime;
     private EditText description;
     private TextView effort;
@@ -87,8 +92,10 @@ public class CreateActivity extends AppCompatActivity {
         /*ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);*/
 
+        //Load widgets
         findViewsById();
 
+        //Load received objects
         taskFilePath = getIntent().getStringExtra("tasksPath");
         Log.d("CreateActivity task", taskFilePath);
         readTasks();
@@ -99,6 +106,7 @@ public class CreateActivity extends AppCompatActivity {
 
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
+        //Add the task in the list if it's a new task
         Boolean isNew = true;
         for (Task task : tasks) {
             if (task.getId() == currentTask.getId()) {
@@ -111,9 +119,7 @@ public class CreateActivity extends AppCompatActivity {
             tasks.add(currentTask);
         }
 
-        //Initialize display regarding the given task (new task or modifying a task?)
-        // TODO
-
+        //Initialize preset spinner
         ArrayList<String> presetList = new ArrayList<String>();
         presetList.add("No preset");
         for (Preset preset : presets) {
@@ -154,6 +160,7 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        //Initialize category spinner
         categories = (ArrayList<String>) getIntent().getSerializableExtra("categories");
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, categories);
@@ -180,11 +187,98 @@ public class CreateActivity extends AppCompatActivity {
 
             }
         });
+
+        //Initialize the repeat spinner
+        ArrayList<String> repeaterList = new ArrayList<String>();
+        repeaterList.add("Don't repeat");
+        repeaterList.add("Repeat every day");
+        repeaterList.add("Repeat every week");
+        repeaterList.add("Repeat every month");
+        repeaterList.add("Repeat every year");
+        ArrayAdapter<String> repeaterAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, repeaterList);
+        repeaterAdapter.setNotifyOnChange(true);
+        repeater.setAdapter(repeaterAdapter);
+        repeater.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                selectedRepeater = parent.getItemAtPosition(pos).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        if (currentTask.getDueDate().equals("")) {
+            repeaterRow.setVisibility(View.GONE);
+        } else {
+            repeaterRow.setVisibility(View.VISIBLE);
+        }
+
+        //Initialize the tags chip group
+        Chip chip = new Chip(this);
+        chip.setText("INF");
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip.setVisibility(View.GONE);
+            }
+        });
+
+        Chip chip2 = new Chip(this);
+        chip2.setText("C++");  //chip2
+        chip2.setCloseIconVisible(true);
+        chip2.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip2.setVisibility(View.GONE);
+            }
+        });
+
+        Chip chip3 = new Chip(this);
+        chip3.setText("IGR");  //chip2
+        chip3.setCloseIconVisible(true);
+        chip3.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip3.setVisibility(View.GONE);
+            }
+        });
+
+        tags.addView(chip);
+        tags.addView(chip2);
+        tags.addView(chip3);
+
+
+
+        //Initialize display regarding the given task (new task or modifying a task?)
+        preset.setSelection(presetAdapter.getPosition(currentTask.getPreset()));
+        selectedPreset = currentTask.getPreset();
+        name.setText(currentTask.getName());
+        category.setSelection(categoryAdapter.getPosition(currentTask.getCategory()));
+        selectedCategory = currentTask.getCategory();
+        dueDate.setText(currentTask.getDueDate());
+        repeater.setSelection(repeaterAdapter.getPosition(currentTask.getRepeater()));
+        selectedRepeater = currentTask.getRepeater();
+        dueTime.setText(currentTask.getDueTime());
+        description.setText(currentTask.getDescription());
+        effort.setText("Effort: " + currentTask.getEffort());
+        urgency.setText("Urgency: " + currentTask.getUrgency());
+        // Tags
+        calendar.setChecked(currentTask.isCalendar());
     }
 
     private void findViewsById() {
         preset = (Spinner) findViewById(R.id.presets);
         dueDate = (TextView) findViewById(R.id.due_date);
+        repeaterRow = (TableRow) findViewById(R.id.repeatRow);
+        repeater = (Spinner) findViewById(R.id.repeater);
         dueTime = (TextView) findViewById(R.id.due_time);
         name = (EditText) findViewById(R.id.name);
         category = (Spinner) findViewById(R.id.category);
@@ -246,7 +340,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment(dueDate);
+        DialogFragment newFragment = new DatePickerFragment(dueDate, repeaterRow);
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
@@ -273,15 +367,26 @@ public class CreateActivity extends AppCompatActivity {
 
         Log.d("Begin", "try");
 
+        // Add the category if it's a new one
+        if (category.getSelectedItem().toString().equals("New category")) {
+            EditText newCategory = (EditText) findViewById(R.id.newCategoryName);
+            categories.add(1, newCategory.getText().toString());
+            selectedCategory = newCategory.getText().toString();
+        }
+
+        // Send back the category array
+        Intent data = new Intent();
+        data.putExtra("categories",categories);
+
         String effortText = effort.getText().toString().split(" ")[1];
         String urgencyText = urgency.getText().toString().split(" ")[1];
 
-        // Adapt --> you receive a task and actualize it
-        // TODO
+        //Modify the current task with the new entries
         currentTask.setPreset(selectedPreset);
         currentTask.setName(name.getText().toString());
         currentTask.setCategory(selectedCategory);
         currentTask.setDueDate(dueDate.getText().toString());
+        currentTask.setRepeater(selectedRepeater);
         currentTask.setDueTime(dueTime.getText().toString());
         currentTask.setDescription(description.getText().toString());
         currentTask.setEffort(Integer.parseInt(effortText));
@@ -308,13 +413,6 @@ public class CreateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Add the category if it's a new one
-        if (category.getSelectedItem().toString().equals("New category")) {
-            EditText newCategory = (EditText) findViewById(R.id.newCategoryName);
-            ArrayAdapter categoryAdapter = (ArrayAdapter) category.getAdapter();
-            categoryAdapter.insert(newCategory.getText().toString(), 1);
-        }
-
         // Add the preset if needed
         if (newPreset.isChecked()) {
             // Add in the spinner
@@ -322,12 +420,7 @@ public class CreateActivity extends AppCompatActivity {
             presetAdapter.add(newPresetName.getText().toString());
 
             // Create the preset
-            String c = category.getSelectedItem().toString(); // Category name
-            if (c.equals("New category")) {
-                EditText newCategory = (EditText) findViewById(R.id.newCategoryName);
-                c = newCategory.getText().toString();
-            }
-            Preset p = new Preset(newPresetName.getText().toString(), c,
+            Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
                     Integer.parseInt(effortText), Integer.parseInt(urgencyText), new String[0], calendar.isChecked());
 
             presets.add(p);
@@ -374,6 +467,7 @@ public class CreateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        setResult(RESULT_OK, data);
         finish();
     }
 }

@@ -89,12 +89,15 @@ public class MainActivity extends AppCompatActivity {
             fileWriter = new FileWriter(taskFile.getAbsoluteFile());
 
             // add premade tasks
-            Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021",
+            Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
                     "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
-            Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021",
+            Task.ID_COUNT += 1;
+            Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
                     "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
-            Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021",
+            Task.ID_COUNT += 1;
+            Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
                     "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
+            Task.ID_COUNT += 1;
 
 
             List<Task> tasks = Arrays.asList(newTask1, newTask2, newTask3);

@@ -2,10 +2,12 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -21,6 +23,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -257,14 +261,31 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
 
     }
+
     public void openAddTaskActivity() {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
         intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         Task newTask = new Task();
+        /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
+                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
+        Task.ID_COUNT += 1;
         intent.putExtra("task", newTask);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+
+                //For testing
+                mCategories.forEach(System.out::println);
+            }
+        }
     }
 
 
