@@ -308,7 +308,7 @@
                     android:scrollbarAlwaysDrawVerticalTrack="false"
                     android:scrollbars="vertical">
 
-                    <com.google.android.material.chip.Chip
+                    <!-- <com.google.android.material.chip.Chip
                         android:id="@+id/chip6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -337,7 +337,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="OpenGL"
-                        app:closeIconVisible="true" />
+                        app:closeIconVisible="true" /> -->
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 

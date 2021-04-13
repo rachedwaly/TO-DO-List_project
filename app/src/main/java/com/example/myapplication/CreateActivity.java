@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -219,10 +220,58 @@ public class CreateActivity extends AppCompatActivity {
             repeaterRow.setVisibility(View.VISIBLE);
         }
 
+        //Initialize the tags chip group
+        Chip chip = new Chip(this);
+        chip.setText("INF");
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip.setVisibility(View.GONE);
+            }
+        });
+
+        Chip chip2 = new Chip(this);
+        chip2.setText("C++");  //chip2
+        chip2.setCloseIconVisible(true);
+        chip2.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip2.setVisibility(View.GONE);
+            }
+        });
+
+        Chip chip3 = new Chip(this);
+        chip3.setText("IGR");  //chip2
+        chip3.setCloseIconVisible(true);
+        chip3.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip3.setVisibility(View.GONE);
+            }
+        });
+
+        tags.addView(chip);
+        tags.addView(chip2);
+        tags.addView(chip3);
+
 
 
         //Initialize display regarding the given task (new task or modifying a task?)
-        // TODO
+        preset.setSelection(presetAdapter.getPosition(currentTask.getPreset()));
+        selectedPreset = currentTask.getPreset();
+        name.setText(currentTask.getName());
+        category.setSelection(categoryAdapter.getPosition(currentTask.getCategory()));
+        selectedCategory = currentTask.getCategory();
+        dueDate.setText(currentTask.getDueDate());
+        repeater.setSelection(repeaterAdapter.getPosition(currentTask.getRepeater()));
+        selectedRepeater = currentTask.getRepeater();
+        dueTime.setText(currentTask.getDueTime());
+        description.setText(currentTask.getDescription());
+        effort.setText("Effort: " + currentTask.getEffort());
+        urgency.setText("Urgency: " + currentTask.getUrgency());
+        // Tags
+        calendar.setChecked(currentTask.isCalendar());
     }
 
     private void findViewsById() {

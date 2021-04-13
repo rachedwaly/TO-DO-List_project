@@ -268,6 +268,8 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         Task newTask = new Task();
+        /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
+                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
         Task.ID_COUNT += 1;
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
