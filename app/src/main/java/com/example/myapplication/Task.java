@@ -13,6 +13,7 @@ public class Task implements Serializable {
     String name;
     String category;
     String dueDate;
+    String repeater;
     String dueTime;
     String description;
     int effort;
@@ -22,11 +23,11 @@ public class Task implements Serializable {
 
     public Task() {
         this.id = ID_COUNT;
-        ID_COUNT += 1;
         this.preset = "No preset";
         this.name = "";
         this.category = "No category";
         this.dueDate = "";
+        this.repeater = "Don't repeat";
         this.dueTime = "";
         this.description = "";
         this.effort = 1;
@@ -35,13 +36,13 @@ public class Task implements Serializable {
         this.calendar = false;
     }
 
-    public Task(String preset, String name, String category, String dueDate, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
+    public Task(String preset, String name, String category, String dueDate, String repeater, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
         this.id = ID_COUNT;
-        ID_COUNT += 1;
         this.preset = preset;
         this.name = name;
         this.category = category;
         this.dueDate = dueDate;
+        this.repeater = repeater;
         this.dueTime = dueTime;
         this.description = description;
         this.effort = effort;
@@ -68,6 +69,10 @@ public class Task implements Serializable {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public void setRepeater(String repeater) {
+        this.repeater = repeater;
     }
 
     public void setDueTime(String dueTime) {
@@ -106,6 +111,10 @@ public class Task implements Serializable {
         return dueDate;
     }
 
+    public String getRepeater() {
+        return repeater;
+    }
+
     public String getDueTime() {
         return dueTime;
     }
@@ -142,6 +151,7 @@ public class Task implements Serializable {
                 "name='" + name + "', " +
                 "category='" + category + "', " +
                 "due date='" + dueDate + "', " +
+                "repeat='" + repeater + "'," +
                 "due time='" + dueTime + "', " +
                 "description='" + description + "', " +
                 "effort=" + effort + ", " +
