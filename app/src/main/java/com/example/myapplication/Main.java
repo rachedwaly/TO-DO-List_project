@@ -20,9 +20,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.io.File;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -85,6 +90,7 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
 public class Main extends Fragment implements AdapterForCards.OnCardListener {
     private ArrayList<Card> cardList = new ArrayList<>();
+    private ArrayList<Task> taskList=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -130,6 +136,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +144,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             mTasksFilePath = getArguments().getString(ARG_TASKS);
             mPresetsFilePath = getArguments().getString(ARG_PRESETS);
             mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
-
+            initializeTasks(mTasksFilePath);
             Log.d("Instance task path", mTasksFilePath);
             Log.d("Instance preset path", mPresetsFilePath);
         }
@@ -152,10 +159,42 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         cardList.add(new Card("Line 5", "Line 6"));
         cardList.add(new Card("Line 3", "Line 4"));
         cardList.add(new Card("Line 3", "Line 4"));
+        System.out.println("zall");
 
 
 
     }
+    public void fillCards(){
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void initializeTasks(String fileName){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(fileName));
+
+            // convert JSON file to map
+            Map<?, ?> map = gson.fromJson(reader, Map.class);
+
+            // print map entries
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + "=" + entry.getValue());
+                Log.d(entry.getKey().toString(),entry.getKey().toString());
+                Log.d(entry.getValue().toString(),entry.getValue().toString());
+
+            }
+
+            // close reader
+            reader.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
