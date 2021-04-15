@@ -89,14 +89,14 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
 
 public class Main extends Fragment implements AdapterForCards.OnCardListener {
-    private ArrayList<Card> cardList = new ArrayList<>();
+
     private ArrayList<Task> taskList=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mRecycleBinButton;
     private FloatingActionButton mAddTaskButton;
-    private Card cardToDelete;
+
     private int newContactPosition = -1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -148,19 +148,30 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             Log.d("Instance task path", mTasksFilePath);
             Log.d("Instance preset path", mPresetsFilePath);
         }
+        /*cardList.add(new Card("Line", "Line 2jhfhjfjgjgjgjgjgjgj"));
+        cardList.add(new Card("Line 3", "Line 4"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 5", "Line 6"));
+        cardList.add(new Card("Line 3", "Line 4"));
+        cardList.add(new Card("Line 3", "Line 4"));
+        System.out.println("zall");*/
 
-        cardList.add(new Card("Line", "Line 2jhfhjfjgjgjgjgjgjgj"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        System.out.println("zall");
+        Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
+                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
 
+        Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
+                "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
+
+        Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
+                "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
+
+        taskList.add(newTask1);
+        taskList.add(newTask2);
+        taskList.add(newTask3);
 
 
     }
@@ -213,7 +224,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
 
-        mAdapter = new AdapterForCards(cardList,this);
+        mAdapter = new AdapterForCards(taskList,this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -247,7 +258,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             moveItem(viewHolder.getAdapterPosition(),target.getAdapterPosition());
             if (isViewOverlapping(viewHolder.itemView, mRecycleBinButton)) {
                 Toast.makeText(getActivity(),"card deleted",Toast.LENGTH_SHORT).show();
-                cardList.remove(viewHolder.getAdapterPosition());
+                taskList.remove(viewHolder.getAdapterPosition());
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -271,9 +282,9 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
 
     //rearrange cards when dragging cards
     private void moveItem(int oldPos, int newPos){
-        Card item=(Card) cardList.get(oldPos);
-        cardList.remove(oldPos);
-        cardList.add(newPos,item);
+        Task item=(Task) taskList.get(oldPos);
+        taskList.remove(oldPos);
+        taskList.add(newPos,item);
         mAdapter.notifyItemMoved(oldPos,newPos);
     }
 
