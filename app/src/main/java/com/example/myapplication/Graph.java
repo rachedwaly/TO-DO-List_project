@@ -181,7 +181,8 @@ public class Graph extends Fragment {
                 case MotionEvent.ACTION_UP:
 //                    Log.d("selectedview", String.valueOf(selectedView.getId()));
 
-                    taskname.setText();
+                    //taskname.setText();
+
                     int effort = Math.round(lastX / 100);
                     int urgent = Math.round(1500 - lastY)/100;
                     taskeffort.setText("Effort: " + effort);
@@ -215,7 +216,7 @@ public class Graph extends Fragment {
 
     private void createTask(float x, float y) {
         ImageView iv = new ImageView(getActivity());
-        iv.setImageResource(R.drawable.task1);
+        //iv.setImageResource(R.drawable.task1);
         iv.setId(index++);
         int left = Math.round(x * 50);
         int bottom = Math.round(y * 50);

@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.chip.ChipGroup;
+
 public class CardDetailedFragment extends DialogFragment {
+
+    private ChipGroup tags;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,6 +32,10 @@ public class CardDetailedFragment extends DialogFragment {
         params.y = 600;
         window.setAttributes(params);
         return inflater.inflate(R.layout.card_detailed_popup,container,false);
+    }
+
+    public void fillDialogFragment(Task task){
+
     }
 
 }

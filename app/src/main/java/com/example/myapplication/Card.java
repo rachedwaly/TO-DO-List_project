@@ -5,6 +5,7 @@ public class Card {
 
     private String name;
     private String categorie;
+    private Task task;
     public Card(String text1, String text2) {
 
         name = text1;

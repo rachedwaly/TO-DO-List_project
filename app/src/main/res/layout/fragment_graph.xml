@@ -58,21 +58,21 @@
                 android:id="@+id/task1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/task1"
+
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="250dp"></ImageView>
             <ImageView
                 android:id="@+id/task2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/task2"
+
                 android:layout_marginLeft="150dp"
                 android:layout_marginTop="50dp"></ImageView>
             <ImageView
                 android:id="@+id/task3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/task3"
+
                 android:layout_marginLeft="250dp"
                 android:layout_marginTop="150dp"></ImageView>
         </RelativeLayout>
