@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
@@ -22,7 +23,6 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -87,10 +87,8 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 }
 
-
 public class Main extends Fragment implements AdapterForCards.OnCardListener {
 
-    private ArrayList<Task> taskList=new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -112,9 +110,22 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     private String mTasksFilePath;
     private String mPresetsFilePath;
     private ArrayList<String> mCategories;
+    private MyTaskListListener listener;
+
 
     public Main() {
         // Required empty public constructor
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (MyTaskListListener) context;
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+        }
     }
 
     /**
@@ -148,32 +159,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             Log.d("Instance task path", mTasksFilePath);
             Log.d("Instance preset path", mPresetsFilePath);
         }
-        /*cardList.add(new Card("Line", "Line 2jhfhjfjgjgjgjgjgjgj"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        System.out.println("zall");*/
-
-        Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
-                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
-
-        Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
-
-        Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
-                "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
-
-        taskList.add(newTask1);
-        taskList.add(newTask2);
-        taskList.add(newTask3);
-
-
     }
     public void fillCards(){
 
@@ -224,7 +209,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
 
-        mAdapter = new AdapterForCards(taskList,this);
+        mAdapter = new AdapterForCards(listener.getTaskList(),this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -258,7 +243,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             moveItem(viewHolder.getAdapterPosition(),target.getAdapterPosition());
             if (isViewOverlapping(viewHolder.itemView, mRecycleBinButton)) {
                 Toast.makeText(getActivity(),"card deleted",Toast.LENGTH_SHORT).show();
-                taskList.remove(viewHolder.getAdapterPosition());
+                listener.remove(viewHolder.getAdapterPosition());
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -282,9 +267,9 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
 
     //rearrange cards when dragging cards
     private void moveItem(int oldPos, int newPos){
-        Task item=(Task) taskList.get(oldPos);
-        taskList.remove(oldPos);
-        taskList.add(newPos,item);
+        Task item=(Task) listener.getTask(oldPos);
+        listener.remove(oldPos);
+        listener.addTask(newPos,item);
         mAdapter.notifyItemMoved(oldPos,newPos);
     }
 
@@ -321,6 +306,11 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
                 "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
         Task.ID_COUNT += 1;
+
+        // TODO : move this to onActivity result
+        listener.addTask(newTask);
+        mAdapter.notifyDataSetChanged();
+
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
     }
