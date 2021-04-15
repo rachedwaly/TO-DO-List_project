@@ -1,8 +1,9 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -50,25 +52,20 @@ public class MainActivity extends AppCompatActivity {
         categories.add("New category");
 
         // Setup navigation
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager2 viewPager = (ViewPager2) findViewById(R.id.pager);
         Log.d("Send task path", taskFile.getAbsolutePath().toString());
         Log.d("Send preset path", presetFile.getAbsolutePath().toString());
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), taskFile.getAbsolutePath().toString(), presetFile.getAbsolutePath().toString(), categories);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this, taskFile.getAbsolutePath().toString(), presetFile.getAbsolutePath().toString(), categories);
         viewPager.setAdapter(myPagerAdapter);
+        viewPager.setUserInputEnabled(false);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        // Deactivating changing menus by swiping
-        viewPager.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-
-
+        new TabLayoutMediator(tabLayout, viewPager,
+                (tab, position) -> {
+                    if (position == 0)   {tab.setText("Calendar");}
+                    if (position == 1)   {tab.setText("Main");}
+                    if (position == 2)   {tab.setText("Graph");}
+                }).attach();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
