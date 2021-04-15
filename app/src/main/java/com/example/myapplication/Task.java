@@ -1,14 +1,19 @@
 package com.example.myapplication;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-public class Task {
+public class Task implements Serializable {
+    static int ID_COUNT = 0;
+
+    int id;
     String preset;
     String name;
     String category;
     String dueDate;
+    String repeater;
     String dueTime;
     String description;
     int effort;
@@ -16,11 +21,28 @@ public class Task {
     String[] tags;
     boolean calendar;
 
-    public Task(String preset, String name, String category, String dueDate, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
+    public Task() {
+        this.id = ID_COUNT;
+        this.preset = "No preset";
+        this.name = "";
+        this.category = "No category";
+        this.dueDate = "";
+        this.repeater = "Don't repeat";
+        this.dueTime = "";
+        this.description = "";
+        this.effort = 1;
+        this.urgency = 1;
+        this.tags = new String[0];
+        this.calendar = false;
+    }
+
+    public Task(String preset, String name, String category, String dueDate, String repeater, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
+        this.id = ID_COUNT;
         this.preset = preset;
         this.name = name;
         this.category = category;
         this.dueDate = dueDate;
+        this.repeater = repeater;
         this.dueTime = dueTime;
         this.description = description;
         this.effort = effort;
@@ -47,6 +69,10 @@ public class Task {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public void setRepeater(String repeater) {
+        this.repeater = repeater;
     }
 
     public void setDueTime(String dueTime) {
@@ -85,6 +111,10 @@ public class Task {
         return dueDate;
     }
 
+    public String getRepeater() {
+        return repeater;
+    }
+
     public String getDueTime() {
         return dueTime;
     }
@@ -109,13 +139,19 @@ public class Task {
         return calendar;
     }
 
+    public int getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Task {" +
+                "id=" + id + ", " +
                 "preset='" + preset + "', " +
                 "name='" + name + "', " +
                 "category='" + category + "', " +
                 "due date='" + dueDate + "', " +
+                "repeat='" + repeater + "'," +
                 "due time='" + dueTime + "', " +
                 "description='" + description + "', " +
                 "effort=" + effort + ", " +

@@ -3,7 +3,10 @@ package com.example.myapplication;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -16,17 +19,18 @@ public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     private TextView dateView;
+    private TableRow repeaterRow;
 
     private SimpleDateFormat dateFormatter;
 
-    public DatePickerFragment(TextView _dateView) {
+    public DatePickerFragment(TextView _dateView, TableRow _repetearRow) {
         this.dateView = _dateView;
+        this.repeaterRow = _repetearRow;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-        dateView = (TextView) getActivity().findViewById(R.id.due_date);
 
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
@@ -39,8 +43,10 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Log.d("Day", "day set");
         Calendar newDate = Calendar.getInstance();
         newDate.set(year, monthOfYear, dayOfMonth);
         dateView.setText(dateFormatter.format(newDate.getTime()));
+        repeaterRow.setVisibility(View.VISIBLE);
     }
 }
