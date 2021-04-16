@@ -293,7 +293,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     public void onCardClick(int position) {
         //position is the item index in the list of cards
         CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
-
+        cardDetailedFragment.fillDialogFragment(listener.getTask(position));
         cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
 
     }
