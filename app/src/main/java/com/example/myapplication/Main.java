@@ -293,6 +293,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     public void onCardClick(int position) {
         //position is the item index in the list of cards
         CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
+        cardDetailedFragment.fillDialogFragment(listener.getTask(position));
         cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
 
     }
@@ -308,8 +309,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         Task.ID_COUNT += 1;
 
         // TODO : move this to onActivity result
-        listener.addTask(newTask);
-        mAdapter.notifyDataSetChanged();
+
 
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
@@ -321,9 +321,10 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 mCategories = data.getStringArrayListExtra("categories");
-
-                //For testing
-                mCategories.forEach(System.out::println);
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(newTask);
+                mAdapter.notifyDataSetChanged();
+                //mCategories.forEach(System.out::println);
             }
         }
     }
