@@ -1,10 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="360dp"
         android:layout_height="400dp"
-        android:background="#800080"/>
+        android:background="#800080"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+        android:layout_width="360dp"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/NameOfTask"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="30dp"
+                android:text="Name of The task"
+                android:textColor="#FFFFFF">
+                </TextView>
+
+            <LinearLayout
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Due on:  "
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:textColor="#FFFFFF"></TextView>
+
+                <TextView
+                    android:id="@+id/DueDate"
+                    android:layout_width="wrap_content"
+                    android:textColor="#FF0000"
+                    android:layout_marginTop="30dp"
+                    android:layout_height="wrap_content"
+                    android:text="13/07/2023"></TextView>
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="30dp"
+            android:background="#808080">
+            <TextView
+                android:id="@+id/DescriptionOfTask"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Description"></TextView>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+
+
+                <HorizontalScrollView
+                    android:layout_width="142dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="#FFFFFF"
+                    >
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/tags"
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"
+                        android:isScrollContainer="true"
+                        android:scrollbarAlwaysDrawHorizontalTrack="false"
+                        android:scrollbarAlwaysDrawVerticalTrack="false"
+                        android:scrollbars="vertical"></com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+
+            <ImageView
+                android:id="@+id/categoryImage"
+                android:layout_width="52dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="32dp"></ImageView>
+
+
+        </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

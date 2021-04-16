@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
@@ -20,9 +21,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
-import java.io.File;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -82,15 +87,14 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 }
 
-
 public class Main extends Fragment implements AdapterForCards.OnCardListener {
-    private ArrayList<Card> cardList = new ArrayList<>();
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mRecycleBinButton;
     private FloatingActionButton mAddTaskButton;
-    private Card cardToDelete;
+
     private int newContactPosition = -1;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,9 +110,22 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     private String mTasksFilePath;
     private String mPresetsFilePath;
     private ArrayList<String> mCategories;
+    private MyTaskListListener listener;
+
 
     public Main() {
         // Required empty public constructor
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (MyTaskListListener) context;
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+        }
     }
 
     /**
@@ -130,6 +147,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,25 +155,42 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             mTasksFilePath = getArguments().getString(ARG_TASKS);
             mPresetsFilePath = getArguments().getString(ARG_PRESETS);
             mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
-
+            initializeTasks(mTasksFilePath);
             Log.d("Instance task path", mTasksFilePath);
             Log.d("Instance preset path", mPresetsFilePath);
         }
-
-        cardList.add(new Card("Line", "Line 2jhfhjfjgjgjgjgjgjgj"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 5", "Line 6"));
-        cardList.add(new Card("Line 3", "Line 4"));
-        cardList.add(new Card("Line 3", "Line 4"));
-
-
+    }
+    public void fillCards(){
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void initializeTasks(String fileName){
+        try {
+            // create Gson instance
+            Gson gson = new Gson();
+
+            // create a reader
+            Reader reader = Files.newBufferedReader(Paths.get(fileName));
+
+            // convert JSON file to map
+            Map<?, ?> map = gson.fromJson(reader, Map.class);
+
+            // print map entries
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + "=" + entry.getValue());
+                Log.d(entry.getKey().toString(),entry.getKey().toString());
+                Log.d(entry.getValue().toString(),entry.getValue().toString());
+
+            }
+
+            // close reader
+            reader.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -174,7 +209,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
 
-        mAdapter = new AdapterForCards(cardList,this);
+        mAdapter = new AdapterForCards(listener.getTaskList(),this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -208,7 +243,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
             moveItem(viewHolder.getAdapterPosition(),target.getAdapterPosition());
             if (isViewOverlapping(viewHolder.itemView, mRecycleBinButton)) {
                 Toast.makeText(getActivity(),"card deleted",Toast.LENGTH_SHORT).show();
-                cardList.remove(viewHolder.getAdapterPosition());
+                listener.remove(viewHolder.getAdapterPosition());
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -232,9 +267,9 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
 
     //rearrange cards when dragging cards
     private void moveItem(int oldPos, int newPos){
-        Card item=(Card) cardList.get(oldPos);
-        cardList.remove(oldPos);
-        cardList.add(newPos,item);
+        Task item=(Task) listener.getTask(oldPos);
+        listener.remove(oldPos);
+        listener.addTask(newPos,item);
         mAdapter.notifyItemMoved(oldPos,newPos);
     }
 
@@ -271,6 +306,11 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
                 "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
         Task.ID_COUNT += 1;
+
+        // TODO : move this to onActivity result
+        listener.addTask(newTask);
+        mAdapter.notifyDataSetChanged();
+
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
     }

@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -8,18 +7,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -29,11 +23,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements MyTaskListListener {
 
     private File taskFile;
     private File presetFile;
     private ArrayList<String> categories;
+    private ArrayList<Task> taskList;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -41,10 +37,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        categories = new ArrayList<String>();
+        taskList =  new ArrayList<Task>();
+
         initializeJSONTasks();
         initializeJSONPresets();
 
-        categories = new ArrayList<String>();
+
+
         categories.add("No category");
         categories.add("Exam");
         categories.add("Project");
@@ -67,6 +67,33 @@ public class MainActivity extends AppCompatActivity {
                     if (position == 2)   {tab.setText("Graph");}
                 }).attach();
     }
+
+    @Override
+    public ArrayList<Task> getTaskList(){
+        return taskList;
+    }
+
+    @Override
+    public void addTask(Task t){
+        taskList.add(t);
+    }
+
+    @Override
+    public void addTask(int pos, Task t){
+        taskList.add(pos, t);
+    }
+
+    @Override
+    public void remove(int t){
+        taskList.remove(t);
+    }
+
+    @Override
+    public Task getTask(int i){
+        return taskList.get(i);
+    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeJSONTasks() {
@@ -99,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
             Task.ID_COUNT += 1;
 
 
-            List<Task> tasks = Arrays.asList(newTask1, newTask2, newTask3);
+            taskList.add(newTask1);
+            taskList.add(newTask2);
+            taskList.add(newTask3);
 
             Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
 
@@ -107,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert user object to JSON file
-            gson.toJson(tasks, writer);
+            gson.toJson(taskList, writer);
 
             // close writer
             writer.close();
