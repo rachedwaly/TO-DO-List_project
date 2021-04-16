@@ -41,6 +41,10 @@
                     android:layout_marginLeft="30dp"
                     android:textColor="#FFFFFF"></TextView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
                 <TextView
                     android:id="@+id/DueDate"
                     android:layout_width="wrap_content"
@@ -48,6 +52,14 @@
                     android:layout_marginTop="30dp"
                     android:layout_height="wrap_content"
                     android:text="13/07/2023"></TextView>
+                <TextView
+                    android:id="@+id/DueTime"
+                    android:layout_width="wrap_content"
+                    android:textColor="#FFFF00"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="wrap_content"
+                    android:text="23:00"></TextView>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -74,11 +86,23 @@
 
 
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Tags"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="35dp"
+                android:textColor="#FFFFFF"/>
                 <HorizontalScrollView
                     android:layout_width="142dp"
                     android:layout_height="35dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="50dp"
                     android:background="#FFFFFF"
                     >
@@ -93,13 +117,30 @@
                         android:scrollbars="vertical"></com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/categoryImage"
-                android:layout_width="52dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="32dp"></ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category: "
+                    android:textColor="#FFFFFF"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="35dp"></TextView>
+
+                <TextView
+                    android:id="@+id/category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textColor="#72bcd4"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="5dp"></TextView>
+
+            </LinearLayout>
 
 
         </LinearLayout>
