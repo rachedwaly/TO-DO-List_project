@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -48,6 +51,14 @@ public class Graph extends Fragment {
     private int screenWidth;
     private int screenHeight;
 
+
+    private static final String ARG_TASKS = "tasksPath";
+    private static final String ARG_PRESETS = "presetsPath";
+    private static final String ARG_CATEGORIES = "categories";
+    private String mTasksFilePath;
+    private String mPresetsFilePath;
+    private ArrayList<String> mCategories;
+
     public Graph() {
         // Required empty public constructor
     }
@@ -61,11 +72,12 @@ public class Graph extends Fragment {
      * @return A new instance of fragment Graph.
      */
     // TODO: Rename and change types and number of parameters
-    public static Graph newInstance(String param1, String param2) {
+    public static Graph newInstance(String tasksFilePath, String presetsFilePath, ArrayList<String> categories) {
         Graph fragment = new Graph();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_TASKS, tasksFilePath);
+        args.putString(ARG_PRESETS, presetsFilePath);
+        args.putStringArrayList(ARG_CATEGORIES, categories);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,7 +88,11 @@ public class Graph extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            mTasksFilePath = getArguments().getString(ARG_TASKS);
+            mPresetsFilePath = getArguments().getString(ARG_PRESETS);
+            mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
         }
+
 
     }
 
@@ -97,6 +113,8 @@ public class Graph extends Fragment {
     }
 
     private void init() {
+
+
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
         screenHeight = dm.heightPixels - 50;
@@ -134,11 +152,12 @@ public class Graph extends Fragment {
             }
         });
 
-        Button add_btn_general = myFragmentView.findViewById(R.id.add_btn_general);
+        FloatingActionButton add_btn_general = myFragmentView.findViewById(R.id.add_btn_general);
         add_btn_general.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAddPopup();
+//                showAddPopup();
+                openAddTaskActivity();
             }
         });
 
@@ -266,5 +285,18 @@ public class Graph extends Fragment {
 
     private void showAddPopup(){
         popup.setVisibility(View.VISIBLE);
+    }
+
+    public void openAddTaskActivity() {
+        Intent intent = new Intent(getActivity(), CreateActivity.class);
+        intent.putExtra("tasksPath", mTasksFilePath);
+        intent.putExtra("presetsPath", mPresetsFilePath);
+        intent.putExtra("categories", mCategories);
+        Task newTask = new Task();
+        /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
+                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
+        Task.ID_COUNT += 1;
+        intent.putExtra("task", newTask);
+        startActivityForResult(intent, 1);
     }
 }
