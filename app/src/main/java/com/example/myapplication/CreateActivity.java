@@ -393,7 +393,7 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setUrgency(Integer.parseInt(urgencyText));
         currentTask.setTags(new String[0]);
         currentTask.setCalendar(calendar.isChecked());
-
+        data.putExtra("task",currentTask);
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
