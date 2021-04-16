@@ -97,7 +97,7 @@
                 android:layout_height="match_parent"
                 android:text="Tags"
                 android:layout_marginLeft="60dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="20dp"
                 android:textColor="#FFFFFF"/>
                 <HorizontalScrollView
                     android:layout_width="142dp"
@@ -139,6 +139,13 @@
                     android:textColor="#72bcd4"
                     android:layout_marginLeft="50dp"
                     android:layout_marginTop="5dp"></TextView>
+                <Button
+                    android:id="@+id/editButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="edit_Task"
+                    android:layout_marginLeft="25dp"
+                    />
 
             </LinearLayout>
 

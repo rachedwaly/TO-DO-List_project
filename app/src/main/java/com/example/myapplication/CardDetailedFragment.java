@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,10 +25,14 @@ public class CardDetailedFragment extends DialogFragment {
     private TextView category;
     private TextView dueTime;
     private ChipGroup tags;
+    private Button button;
 
     private int position;
     private MyTaskListListener listener;
 
+    public interface EditTaskListener{
+        void openEditTaskActivity(int i);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -51,7 +56,14 @@ public class CardDetailedFragment extends DialogFragment {
         category=view.findViewById(R.id.category);
         dueTime=view.findViewById(R.id.DueTime);
         tags = view.findViewById(R.id.tags);
+        button=view.findViewById(R.id.editButton);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendBackResult();
+            }
+        });
         for (String s: currentTask.getTags()) {
             tags.addView(createChip(s));
 
@@ -88,4 +100,9 @@ public class CardDetailedFragment extends DialogFragment {
         return chip;
     }
 
+    public void sendBackResult(){
+        EditTaskListener listener= (EditTaskListener) getTargetFragment();
+        listener.openEditTaskActivity(position);
+        dismiss();
+    }
 }

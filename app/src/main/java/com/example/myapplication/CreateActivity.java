@@ -378,6 +378,8 @@ public class CreateActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra("categories",categories);
 
+        data.putExtra("position",getIntent().getIntExtra("position",-1));
+
         String effortText = effort.getText().toString().split(" ")[1];
         String urgencyText = urgency.getText().toString().split(" ")[1];
 
