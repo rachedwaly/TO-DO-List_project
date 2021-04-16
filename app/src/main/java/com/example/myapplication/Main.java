@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,7 +88,7 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 }
 
-public class Main extends Fragment implements AdapterForCards.OnCardListener {
+public class Main extends Fragment implements AdapterForCards.OnCardListener, CardDetailedFragment.EditTaskListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -294,6 +295,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
         //position is the item index in the list of cards
         CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
         cardDetailedFragment.fillDialogFragment(position);
+        cardDetailedFragment.setTargetFragment(Main.this,300);
         cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
 
     }
@@ -316,6 +318,24 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
     }
 
 
+
+
+
+
+
+    @Override
+    public void openEditTaskActivity(int i) {
+        Intent intent = new Intent(getActivity(), CreateActivity.class);
+        intent.putExtra("tasksPath", mTasksFilePath);
+        intent.putExtra("presetsPath", mPresetsFilePath);
+        intent.putExtra("categories", mCategories);
+        intent.putExtra("task", listener.getTask(i));
+        intent.putExtra("position",i);
+
+        startActivityForResult(intent, 2);
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -327,8 +347,19 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener {
                 //mCategories.forEach(System.out::println);
             }
         }
+        if (requestCode == 2) {
+
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+                int position=data.getIntExtra("position",-1);
+
+                listener.remove(position);
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(position,newTask);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
-
-
 }
+
 
