@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Graph#newInstance} factory method to
@@ -334,6 +336,17 @@ public class Graph extends Fragment {
         Task.ID_COUNT += 1;
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+
+                //For testing
+                mCategories.forEach(System.out::println);
+            }
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
