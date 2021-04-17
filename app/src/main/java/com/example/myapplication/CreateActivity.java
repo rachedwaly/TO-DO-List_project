@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -10,35 +9,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.slider.Slider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -61,8 +53,8 @@ public class CreateActivity extends AppCompatActivity {
     private String selectedRepeater;
     private TextView dueTime;
     private EditText description;
-    private TextView effort;
-    private TextView urgency;
+    private Slider effortSlider;
+    private Slider urgencySlider;
     private ChipGroup tags;
     private CheckBox calendar;
     private CheckBox newPreset;
@@ -81,7 +73,7 @@ public class CreateActivity extends AppCompatActivity {
 
     private Task currentTask;
 
-
+    private ArrayList<String> tagsList;
     private ArrayList<String> categories;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -89,6 +81,16 @@ public class CreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        tagsList = new ArrayList<String>();
+        tagsList.add("INF");
+        tagsList.add("C++");
+        tagsList.add("Test");
+        tagsList.add("meeting");
+        tagsList.add("IGR");
+        tagsList.add("IGR");
+        tagsList.add("IGR");
+        tagsList.add("IGR");
 
         /*ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);*/
@@ -107,12 +109,18 @@ public class CreateActivity extends AppCompatActivity {
 
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
+        int requestcode = getIntent().getIntExtra("requestCode", 1);
+        if (requestcode == 2) {
+            Button button = (Button) findViewById(R.id.createButton);
+            button.setText("Modify");
+        }
+
         //Add the task in the list if it's a new task
         Boolean isNew = true;
         for (Task task : tasks) {
             if (task.getId() == currentTask.getId()) {
                 isNew = false;
-                //currentTask = task;
+                currentTask = task;
             }
         }
 
@@ -141,8 +149,8 @@ public class CreateActivity extends AppCompatActivity {
                     for (Preset p : presets) {
                         if (p.getName().equals(selectedPreset)) {
                             selectedCategory = p.getCategory();
-                            effort.setText("Effort: " + p.getEffort());
-                            urgency.setText("Urgency: " + p.getUrgency());
+                            effortSlider.setValue(p.getEffort());
+                            urgencySlider.setValue(p.getUrgency());
                             calendar.setChecked(p.isCalendar());
                         }
                     }
@@ -221,47 +229,12 @@ public class CreateActivity extends AppCompatActivity {
             repeaterRow.setVisibility(View.VISIBLE);
         }
 
-        //Initialize the tags chip group
-        Chip chip = new Chip(this);
-        chip.setText("INF");
-        chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chip.setVisibility(View.GONE);
-            }
-        });
-
-        Chip chip2 = new Chip(this);
-        chip2.setText("C++");  //chip2
-        chip2.setCloseIconVisible(true);
-        chip2.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chip2.setVisibility(View.GONE);
-            }
-        });
-
-        Chip chip3 = new Chip(this);
-        chip3.setText("IGR");  //chip2
-        chip3.setCloseIconVisible(true);
-        chip3.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chip3.setVisibility(View.GONE);
-            }
-        });
-
-        tags.addView(chip);
-        tags.addView(chip2);
-        tags.addView(chip3);
-
-
 
         //Initialize display regarding the given task (new task or modifying a task?)
-        preset.setSelection(presetAdapter.getPosition(currentTask.getPreset()));
+        preset.setSelection(0);
         selectedPreset = currentTask.getPreset();
         name.setText(currentTask.getName());
+        Log.d("category", currentTask.getCategory());
         category.setSelection(categoryAdapter.getPosition(currentTask.getCategory()));
         selectedCategory = currentTask.getCategory();
         dueDate.setText(currentTask.getDueDate());
@@ -269,10 +242,25 @@ public class CreateActivity extends AppCompatActivity {
         selectedRepeater = currentTask.getRepeater();
         dueTime.setText(currentTask.getDueTime());
         description.setText(currentTask.getDescription());
-        effort.setText("Effort: " + currentTask.getEffort());
-        urgency.setText("Urgency: " + currentTask.getUrgency());
-        // Tags
+        Log.d("effort", String.valueOf(currentTask.getEffort()));
+        effortSlider.setValue(currentTask.getEffort());
+        urgencySlider.setValue(currentTask.getUrgency());
         calendar.setChecked(currentTask.isCalendar());
+
+        //Initialize the tags chip group
+        for (String tag : currentTask.getTags()) {
+            Chip chip = new Chip(this);
+            chip.setText(tag);
+            chip.setCloseIconVisible(true);
+            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chip.setVisibility(View.GONE);
+                }
+            });
+
+            tags.addView(chip);
+        }
     }
 
     private void findViewsById() {
@@ -284,8 +272,8 @@ public class CreateActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.name);
         category = (Spinner) findViewById(R.id.category);
         description = (EditText) findViewById(R.id.description);
-        effort = (TextView) findViewById(R.id.effort);
-        urgency = (TextView) findViewById(R.id.urgency);
+        effortSlider = (Slider) findViewById(R.id.effort);
+        urgencySlider = (Slider) findViewById(R.id.urgency);
         tags = (ChipGroup) findViewById(R.id.tags);
         calendar = (CheckBox) findViewById(R.id.calendar);
         newPreset = (CheckBox) findViewById(R.id.newPreset);
@@ -350,6 +338,13 @@ public class CreateActivity extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    public void showTagsDialog(View v) {
+        // Create the fragment and show it as a dialog.
+        DialogFragment newFragment = TagsPickerFragment.newInstance(tagsList, currentTask.getTags());
+        FragmentManager fm = getSupportFragmentManager();
+        newFragment.show(fm, "fragment_tags");
+    }
+
     public void onPresetCheckboxClicked(View view) {
         // Is the view now checked?
         boolean checked = newPreset.isChecked();
@@ -381,9 +376,6 @@ public class CreateActivity extends AppCompatActivity {
 
         data.putExtra("position",getIntent().getIntExtra("position",-1));
 
-        String effortText = effort.getText().toString().split(" ")[1];
-        String urgencyText = urgency.getText().toString().split(" ")[1];
-
         //Modify the current task with the new entries
         currentTask.setPreset(selectedPreset);
         currentTask.setName(name.getText().toString());
@@ -392,11 +384,12 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setRepeater(selectedRepeater);
         currentTask.setDueTime(dueTime.getText().toString());
         currentTask.setDescription(description.getText().toString());
-        currentTask.setEffort(Integer.parseInt(effortText));
-        currentTask.setUrgency(Integer.parseInt(urgencyText));
+        currentTask.setEffort((int) effortSlider.getValue());
+        Log.d("Effort", String.valueOf(currentTask.getEffort()));
+        currentTask.setUrgency((int) urgencySlider.getValue());
         currentTask.setTags(new HashSet<String>());
         currentTask.setCalendar(calendar.isChecked());
-        data.putExtra("task",currentTask);
+        data.putExtra("task", currentTask);
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -424,7 +417,7 @@ public class CreateActivity extends AppCompatActivity {
 
             // Create the preset
             Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
-                    Integer.parseInt(effortText), Integer.parseInt(urgencyText), new String[0], calendar.isChecked());
+                    (int) effortSlider.getValue(), (int) urgencySlider.getValue(), new String[0], calendar.isChecked());
 
             presets.add(p);
 
