@@ -179,6 +179,10 @@ public class Graph extends Fragment implements MyFragmentListener {
                     lastY = (int) event.getRawY();
                     x = (int) event.getRawX();
                     y = (int) event.getRawY();
+                    Log.d("x", String.valueOf(Math.round((x - 150) / llTouchwidth / 5) + 1));
+                    Log.d("y", String.valueOf(Math.round((1500 - y)/ llTouchwidth / 5) + 1));
+
+
                     break;
                 case MotionEvent.ACTION_MOVE:
                     int dx = (int) event.getRawX() - lastX;
@@ -219,8 +223,12 @@ public class Graph extends Fragment implements MyFragmentListener {
 //                    Log.d("selectedview", String.valueOf(selectedView.getId()));
 
 //                    taskname.setText(data_name.get(v.getId()));
-                    Log.d("x", String.valueOf(lastX));
-                    Log.d("y", String.valueOf(lastY));
+
+
+
+
+                    //Log.d("x", String.valueOf(lastX));
+                    //Log.d("y", String.valueOf(lastY));
                     taskname.setText(tasks.get(v.getId()).getName());
                     int scale = llTouchwidth / 5;
                     int effort = Math.round((lastX - 150) / scale) + 1;
@@ -238,7 +246,7 @@ public class Graph extends Fragment implements MyFragmentListener {
                     listener.remove(position);
                     listener.addTask(position,currentTask);
                     listener.updateTagList(currentTask.getTags());
-                    updateView();
+
 //                    mAdapter.notifyDataSetChanged();
 
                     for(int i = 0 ; i < tasks.size(); i++){
