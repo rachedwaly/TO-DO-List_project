@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     private ArrayList<Task> completeTaskList;
     private HashSet<String> tagList;
     private HashSet<String> activeTagList;
+    MyPagerAdapter myPagerAdapter;
+    MyFragmentListener fragmentListener;
 
     private Button filterButton;
 
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         ViewPager2 viewPager = (ViewPager2) findViewById(R.id.pager);
         Log.d("Send task path", taskFile.getAbsolutePath().toString());
         Log.d("Send preset path", presetFile.getAbsolutePath().toString());
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this, taskFile.getAbsolutePath().toString(), presetFile.getAbsolutePath().toString(), categories);
+        myPagerAdapter = new MyPagerAdapter(this, taskFile.getAbsolutePath().toString(), presetFile.getAbsolutePath().toString(), categories);
         viewPager.setAdapter(myPagerAdapter);
         viewPager.setUserInputEnabled(false);
 
@@ -146,15 +149,39 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     @Override
     public void activateTag(String tag) {
         activeTagList.add(tag);
+        updateFilteredList();
+
     }
 
     @Override
     public void deactivateTag(String tag) {
         activeTagList.remove(tag);
+        updateFilteredList();
+    }
+
+    @Override
+    public void deactivateAllTags() {
+        activeTagList.clear();
+        updateFilteredList();
+    }
+
+    public void updateFilteredList(){
+        filteredTaskList.clear();
+        for (Task task : completeTaskList){
+            if (isFiltered(task)){
+                filteredTaskList.add(task);
+            }
+        }
+        if (fragmentListener!=null) { fragmentListener.updateView(); }
     }
 
     @Override
     public void updateTagList(HashSet<String> taskTagList) { tagList.addAll(taskTagList); }
+
+    @Override
+    public void registerFragmentListener(MyFragmentListener fragmentListener) {
+        this.fragmentListener = fragmentListener;
+    }
 
     public Boolean isFiltered(Task t){  // true if element should be displayed
         if (activeTagList.isEmpty()) { return true; }
@@ -191,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
                     "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++")), true);
             Task.ID_COUNT += 1;
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("meeting")), false);
+                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting")), false);
             Task.ID_COUNT += 1;
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
                     "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);

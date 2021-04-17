@@ -2,11 +2,14 @@ package com.example.myapplication;
 
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.List;
 
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.adapter.FragmentViewHolder;
 
 
 public class MyPagerAdapter extends FragmentStateAdapter {
@@ -39,4 +42,5 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         return NUM_ITEMS;
     }
+
 }
