@@ -435,7 +435,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         currentTask.setEffort((int) effortSlider.getValue());
         Log.d("Effort", String.valueOf(currentTask.getEffort()));
         currentTask.setUrgency((int) urgencySlider.getValue());
-        currentTask.setTags(new HashSet<String>());
         currentTask.setCalendar(calendar.isChecked());
 
         data.putExtra("task", currentTask);
