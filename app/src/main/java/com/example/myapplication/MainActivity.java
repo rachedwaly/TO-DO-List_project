@@ -196,9 +196,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     public Boolean isFiltered(Task t){  // true if element should be displayed
         if (activeTagList.isEmpty()) { return true; }
         else {
-            Set<String> intersectSet = new HashSet<>(t.getTags());
-            intersectSet.retainAll(activeTagList);
-            return !(intersectSet.isEmpty());
+            return (t.getTags()).containsAll(activeTagList);
         }
     }
 
