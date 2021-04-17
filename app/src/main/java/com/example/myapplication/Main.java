@@ -304,6 +304,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
+        intent.putExtra("tagList", listener.getTagList());
         intent.putExtra("requestCode", 1);
         Task newTask = new Task();
         /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
@@ -331,6 +332,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         intent.putExtra("categories", mCategories);
         intent.putExtra("task", listener.getTask(i));
         intent.putExtra("position", i);
+        intent.putExtra("tagList", listener.getTagList());
         intent.putExtra("requestCode", 2);
         startActivityForResult(intent, 2);
 
@@ -343,6 +345,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 mCategories = data.getStringArrayListExtra("categories");
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
+                listener.updateTagList(newTask.getTags());
                 mAdapter.notifyDataSetChanged();
                 //mCategories.forEach(System.out::println);
             }
@@ -356,6 +359,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 listener.remove(position);
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
+                listener.updateTagList(newTask.getTags());
                 mAdapter.notifyDataSetChanged();
             }
         }

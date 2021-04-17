@@ -82,15 +82,7 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        tagsList = new HashSet<String>();
-        tagsList.add("INF");
-        tagsList.add("C++");
-        tagsList.add("Test");
-        tagsList.add("meeting");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
+        tagsList = (HashSet<String>) (getIntent().getSerializableExtra("tagList"));
 
         /*ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);*/

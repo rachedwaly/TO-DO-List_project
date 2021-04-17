@@ -13,5 +13,5 @@ public interface MyTaskListListener {
     public HashSet<String> getActiveTagList();
     public void activateTag(String tag);
     public void deactivateTag(String tag);
-    public void addNewTag(String tag);
+    public void updateTagList(HashSet<String> taskTagList);
 }

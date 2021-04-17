@@ -154,9 +154,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     }
 
     @Override
-    public void addNewTag(String tag) {
-        tagList.add(tag);
-    }
+    public void updateTagList(HashSet<String> taskTagList) { tagList.addAll(taskTagList); }
 
     public Boolean isFiltered(Task t){  // true if element should be displayed
         if (activeTagList.isEmpty()) { return true; }
