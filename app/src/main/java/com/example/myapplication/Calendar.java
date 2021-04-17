@@ -8,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.tlaabs.timetableview.Schedule;
+import com.github.tlaabs.timetableview.Time;
+import com.github.tlaabs.timetableview.TimetableView;
+
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Calendar#newInstance} factory method to
@@ -15,50 +21,50 @@ import android.view.ViewGroup;
  */
 public class Calendar extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private View calendarFragmentView;
+    private TimetableView timetable;
+
+    private static final String ARG_TASKS = "tasksPath";
+    private static final String ARG_PRESETS = "presetsPath";
+    private static final String ARG_CATEGORIES = "categories";
 
     public Calendar() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Calendar.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Calendar newInstance(String param1, String param2) {
+    public static Calendar newInstance(String tasksFilePath, String presetsFilePath, ArrayList<String> categories) {
         Calendar fragment = new Calendar();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_TASKS, tasksFilePath);
+        args.putString(ARG_PRESETS, presetsFilePath);
+        args.putStringArrayList(ARG_CATEGORIES, categories);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_calendar, container, false);
+        calendarFragmentView = inflater.inflate(R.layout.fragment_calendar, container, false);
+        timetable = (TimetableView) calendarFragmentView.findViewById(R.id.timetable);
+        ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+        Schedule schedule = new Schedule();
+        schedule.setClassTitle("Test"); // sets subject
+        schedule.setClassPlace("IGR"); // sets place
+        schedule.setStartTime(new Time(10,0)); // sets the beginning of class time (hour,minute)
+        schedule.setEndTime(new Time(13,30)); // sets the end of class time (hour,minute)
+        schedules.add(schedule);
+//.. add one or more schedule
+        timetable.add(schedules);
+        return calendarFragmentView;
     }
 }
