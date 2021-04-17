@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -112,7 +112,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
     private String mPresetsFilePath;
     private ArrayList<String> mCategories;
     private MyTaskListListener listener;
-
 
     public Main() {
         // Required empty public constructor
@@ -210,7 +209,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
 
-        mAdapter = new AdapterForCards(listener.getTaskList(),this);
+        mAdapter = new AdapterForCards(listener.getFilteredTaskList(),this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -305,6 +304,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
+        intent.putExtra("tagList", listener.getTagList());
         intent.putExtra("requestCode", 1);
         Task newTask = new Task();
         /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
@@ -332,6 +332,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         intent.putExtra("categories", mCategories);
         intent.putExtra("task", listener.getTask(i));
         intent.putExtra("position", i);
+        intent.putExtra("tagList", listener.getTagList());
         intent.putExtra("requestCode", 2);
         startActivityForResult(intent, 2);
 
@@ -344,6 +345,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 mCategories = data.getStringArrayListExtra("categories");
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
+                listener.updateTagList(newTask.getTags());
                 mAdapter.notifyDataSetChanged();
                 //mCategories.forEach(System.out::println);
             }
@@ -357,6 +359,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 listener.remove(position);
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
+                listener.updateTagList(newTask.getTags());
                 mAdapter.notifyDataSetChanged();
             }
         }
