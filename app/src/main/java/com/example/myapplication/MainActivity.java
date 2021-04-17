@@ -21,7 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity implements MyTaskListListener {
@@ -29,7 +32,11 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     private File taskFile;
     private File presetFile;
     private ArrayList<String> categories;
-    private ArrayList<Task> taskList;
+    private ArrayList<Task> filteredTaskList;
+    private ArrayList<Task> completeTaskList;
+    private HashSet<String> tagList;
+    private HashSet<String> activeTagList;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -38,7 +45,10 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         setContentView(R.layout.activity_main);
 
         categories = new ArrayList<String>();
-        taskList =  new ArrayList<Task>();
+        filteredTaskList =  new ArrayList<Task>();
+        completeTaskList =  new ArrayList<Task>();
+        tagList =  new  HashSet<String>();
+        activeTagList =  new  HashSet<String>();
 
         initializeJSONTasks();
         initializeJSONPresets();
@@ -69,28 +79,51 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     }
 
     @Override
-    public ArrayList<Task> getTaskList(){
-        return taskList;
+    public ArrayList<Task> getFilteredTaskList(){
+        return filteredTaskList;
     }
 
     @Override
     public void addTask(Task t){
-        taskList.add(t);
+        completeTaskList.add(t);
+        t.setPosCompleteTaskList(completeTaskList.size()-1);
+        if (isFiltered(t)){
+            filteredTaskList.add(t);
+        }
     }
 
     @Override
-    public void addTask(int pos, Task t){
-        taskList.add(pos, t);
+    public void addTask(int posInFiltered, Task t){
+        completeTaskList.add(t);
+        t.setPosCompleteTaskList(completeTaskList.size()-1);
+        filteredTaskList.add(posInFiltered, t);
     }
 
     @Override
-    public void remove(int t){
-        taskList.remove(t);
+    public void remove(int posInFiltered){
+        Task t = filteredTaskList.get(posInFiltered);
+        int posInComplete = t.getPosCompleteTaskList();
+        t.setPosCompleteTaskList((completeTaskList.size()-1));
+        (completeTaskList.get((completeTaskList.size()-1))).setPosCompleteTaskList(posInComplete);
+        Collections.swap(completeTaskList, posInComplete, completeTaskList.size()-1);
+
+        completeTaskList.remove(completeTaskList.size()-1);
+
+        filteredTaskList.remove(posInFiltered);
     }
 
     @Override
-    public Task getTask(int i){
-        return taskList.get(i);
+    public Task getTask(int posInFiltered){
+        return filteredTaskList.get(posInFiltered);
+    }
+
+    public Boolean isFiltered(Task t){  // true if element should be displayed
+        if (activeTagList.isEmpty()) { return true; }
+        else {
+            Set<String> intersectSet = new HashSet<>(t.getTags());
+            intersectSet.retainAll(activeTagList);
+            return !(intersectSet.isEmpty());
+        }
     }
 
 
@@ -116,19 +149,24 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
 
             // add premade tasks
             Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
-                    "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
+                    "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++")), true);
             Task.ID_COUNT += 1;
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
+                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("meeting")), false);
             Task.ID_COUNT += 1;
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
-                    "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
+                    "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
             Task.ID_COUNT += 1;
 
+            tagList.add("exam");
+            tagList.add("c++");
+            tagList.add("meeting");
+            tagList.add("project");
+            tagList.add("hard");
 
-            taskList.add(newTask1);
-            taskList.add(newTask2);
-            taskList.add(newTask3);
+            addTask(newTask1);
+            addTask(newTask2);
+            addTask(newTask3);
 
             Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
 
@@ -136,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             // convert user object to JSON file
-            gson.toJson(taskList, writer);
+            gson.toJson(filteredTaskList, writer);
 
             // close writer
             writer.close();

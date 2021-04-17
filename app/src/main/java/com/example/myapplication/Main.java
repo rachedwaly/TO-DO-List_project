@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -210,7 +209,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         mLayoutManager = new GridLayoutManager(getActivity(),2);
 
 
-        mAdapter = new AdapterForCards(listener.getTaskList(),this);
+        mAdapter = new AdapterForCards(listener.getFilteredTaskList(),this);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);

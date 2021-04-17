@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class CreateActivity extends AppCompatActivity {
@@ -393,7 +394,7 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setDescription(description.getText().toString());
         currentTask.setEffort(Integer.parseInt(effortText));
         currentTask.setUrgency(Integer.parseInt(urgencyText));
-        currentTask.setTags(new String[0]);
+        currentTask.setTags(new HashSet<String>());
         currentTask.setCalendar(calendar.isChecked());
         data.putExtra("task",currentTask);
         // create Gson instance
