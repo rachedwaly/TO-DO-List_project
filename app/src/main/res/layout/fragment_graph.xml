@@ -29,13 +29,6 @@
             android:text="Urgent: " />
     </LinearLayout>
 
-<!--    single line-->
-<!--    <View-->
-<!--        android:layout_width="2dp"-->
-<!--        android:layout_height="500dp"-->
-<!--        android:background="#000000"-->
-<!--        android:layout_alignLeft="@id/ll_touch" -->
-<!--        android:layout_margin="50px"/>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -56,10 +49,10 @@
         <TableLayout
             android:id="@+id/yaxis"
             android:layout_width="50dp"
-            android:layout_height="300dp"
+            android:layout_height="350dp"
             android:layout_toLeftOf="@id/ll_touch"
             android:background="#000"
-            android:layout_marginTop="50dp">
+            >
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
@@ -68,6 +61,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Urgent"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
+            </TableRow>
+            <TableRow
+                android:layout_weight="1"
+                android:background="#fff"
+                android:layout_marginRight="1dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:gravity="end"></TextView>
             </TableRow>
@@ -130,7 +134,7 @@
         <!--        x axis-->
         <TableLayout
             android:id="@+id/xaxis"
-            android:layout_width="350dp"
+            android:layout_width="400dp"
             android:layout_height="20dp"
             android:stretchColumns="*"
             android:background="#000"
@@ -176,6 +180,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:gravity="end"></TextView>
                 <TextView
