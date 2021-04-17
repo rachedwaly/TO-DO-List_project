@@ -361,6 +361,10 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    public void onModifyClicked(View view) {
+        Graph newFragment = new Graph();
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onCreateClicked(View view) {
