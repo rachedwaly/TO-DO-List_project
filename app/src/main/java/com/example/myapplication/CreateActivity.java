@@ -73,7 +73,7 @@ public class CreateActivity extends AppCompatActivity {
 
     private Task currentTask;
 
-    private ArrayList<String> tagsList;
+    private HashSet<String> tagsList;
     private ArrayList<String> categories;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -82,7 +82,7 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        tagsList = new ArrayList<String>();
+        tagsList = new HashSet<String>();
         tagsList.add("INF");
         tagsList.add("C++");
         tagsList.add("Test");

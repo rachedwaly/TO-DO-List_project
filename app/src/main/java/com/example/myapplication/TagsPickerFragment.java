@@ -17,24 +17,25 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TagsPickerFragment extends DialogFragment {
 
     private static final String ARG_TAGS = "tags";
     private static final String ARG_SELECTED_TAGS = "selectedTags";
 
-    private ArrayList<String> mTagsList;
-    private ArrayList<String> mSelectedTags;
+    private HashSet<String> mTagsList;
+    private HashSet<String> mSelectedTags;
 
     private EditText newTagName;
     private ImageButton addTagsButton;
     private ChipGroup tagsGroup;
 
-    public static TagsPickerFragment newInstance(ArrayList<String> tagsList, ArrayList<String> selectedTags) {
+    public static TagsPickerFragment newInstance(HashSet<String> tagsList, HashSet<String> selectedTags) {
         TagsPickerFragment frag = new TagsPickerFragment();
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_TAGS, tagsList);
-        args.putStringArrayList(ARG_SELECTED_TAGS, selectedTags);
+        args.putSerializable(ARG_TAGS, tagsList);
+        args.putSerializable(ARG_SELECTED_TAGS, selectedTags);
         frag.setArguments(args);
         return frag;
     }
@@ -43,8 +44,8 @@ public class TagsPickerFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mTagsList = getArguments().getStringArrayList(ARG_TAGS);
-            mSelectedTags = getArguments().getStringArrayList(ARG_SELECTED_TAGS);
+            mTagsList = (HashSet<String>) getArguments().getSerializable(ARG_TAGS);
+            mSelectedTags = (HashSet<String>) getArguments().getSerializable(ARG_SELECTED_TAGS);
         }
     }
 
