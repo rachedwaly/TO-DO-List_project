@@ -21,12 +21,12 @@ import java.util.ArrayList;
 
 
 public class AdapterForCards extends RecyclerView.Adapter<AdapterForCards.ViewHolder>  {
-    private ArrayList<Card> list;
+    private ArrayList<Task> list;
     private OnCardListener mOnCardListener;
 
 
-    public AdapterForCards(ArrayList<Card> cardList, OnCardListener onCardListener) {
-        list=cardList;
+    public AdapterForCards(ArrayList<Task> taskList, OnCardListener onCardListener) {
+        list=taskList;
         this.mOnCardListener=onCardListener;
     }
 
@@ -65,9 +65,9 @@ public class AdapterForCards extends RecyclerView.Adapter<AdapterForCards.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Card currentItem = list.get(position);
-        holder.mTextView1.setText(currentItem.getText1());
-        holder.mTextView2.setText(currentItem.getText2());
+        Task currentItem = list.get(position);
+        holder.mTextView1.setText(currentItem.getName());
+        holder.mTextView2.setText(currentItem.getDueDate());
 
 
 

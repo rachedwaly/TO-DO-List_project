@@ -382,6 +382,8 @@ public class CreateActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra("categories",categories);
 
+        data.putExtra("position",getIntent().getIntExtra("position",-1));
+
         String effortText = effort.getText().toString().split(" ")[1];
         String urgencyText = urgency.getText().toString().split(" ")[1];
 
@@ -397,7 +399,7 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setUrgency(Integer.parseInt(urgencyText));
         currentTask.setTags(new String[0]);
         currentTask.setCalendar(calendar.isChecked());
-
+        data.putExtra("task",currentTask);
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
