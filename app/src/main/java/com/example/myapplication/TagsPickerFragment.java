@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -30,6 +32,24 @@ public class TagsPickerFragment extends DialogFragment {
     private EditText newTagName;
     private ImageButton addTagsButton;
     private ChipGroup tagsGroup;
+
+    public interface onTagsEventListener {
+        public void addTags(String s);
+        public void addNewTags(String s);
+        public void removeTags(String s);
+    }
+
+    onTagsEventListener tagsEventListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            tagsEventListener = (onTagsEventListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+        }
+    }
 
     public static TagsPickerFragment newInstance(HashSet<String> tagsList, HashSet<String> selectedTags) {
         TagsPickerFragment frag = new TagsPickerFragment();
@@ -64,11 +84,15 @@ public class TagsPickerFragment extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                if (!newTagName.getText().toString().equals("")) {
-                    mTagsList.add(newTagName.getText().toString());
+                String newTag = newTagName.getText().toString();
+                if (!newTag.equals("")) {
+                    tagsEventListener.addNewTags(newTag);
+
+                    mTagsList.add(newTag);
+                    mSelectedTags.add(newTag);
 
                     Chip chip = new Chip(getContext());
-                    chip.setText(newTagName.getText().toString());
+                    chip.setText(newTag);
                     chip.setCheckable(true);
                     chip.setChecked(true);
 
@@ -82,10 +106,22 @@ public class TagsPickerFragment extends DialogFragment {
             Chip chip = new Chip(getContext());
             chip.setText(tag);
             chip.setCheckable(true);
-            if (isSelected(tag)) {
+            if (mSelectedTags.contains(tag)) {
                 chip.setChecked(true);
             }
 
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        mSelectedTags.add(tag);
+                        tagsEventListener.addTags(tag);
+                    } else {
+                        mSelectedTags.remove(tag);
+                        tagsEventListener.removeTags(tag);
+                    }
+                }
+            });
 
             tagsGroup.addView(chip);
 
@@ -94,19 +130,6 @@ public class TagsPickerFragment extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-    }
-
-    private boolean isSelected(String tag) {
-        for (String t : mSelectedTags) {
-            if (tag.equals(t)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 }
