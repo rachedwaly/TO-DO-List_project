@@ -65,6 +65,7 @@ public class Graph extends Fragment {
     private LinearLayout popup;
     private TextView taskname, taskeffort, taskurgent;
     private int index = 0;
+    private MyTaskListListener listener;
 
 
     private static final String ARG_TASKS = "tasksPath";
@@ -97,6 +98,17 @@ public class Graph extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (MyTaskListListener) context;
+            listener.registerFragmentListener(((MyFragmentListener)this));
+        } catch (ClassCastException castException) {
+            /** The activity does not implement the listener. */
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,9 +138,13 @@ public class Graph extends Fragment {
 //            createTask(data_effort.get(i), data_urgent.get(i));
 //        }
         for(int i = 0 ; i < tasks.size(); i++){
-            Log.d("create task: ", String.valueOf(tasks.get(i).id) + String.valueOf(tasks.get(i).effort) + String.valueOf(tasks.get(i).urgency));
-            createTask(tasks.get(i).id, tasks.get(i).effort, tasks.get(i).urgency);
+            Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
+            createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
         }
+
+
+
+
 
     }
 
@@ -251,7 +267,7 @@ public class Graph extends Fragment {
 //                    taskname.setText(data_name.get(v.getId()));
                     Log.d("x", String.valueOf(lastX));
                     Log.d("y", String.valueOf(lastY));
-                    taskname.setText(tasks.get(v.getId()).name);
+                    taskname.setText(tasks.get(v.getId()).getName());
                     int scale = llTouchwidth / 5;
                     int effort = Math.round((lastX - 150) / scale) + 1;
                     int urgent = Math.round((1500 - lastY)/ scale) + 1;
