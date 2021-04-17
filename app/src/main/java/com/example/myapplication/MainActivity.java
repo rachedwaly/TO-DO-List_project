@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         if (isFiltered(t)){
             filteredTaskList.add(t);
         }
+        updateFragments();
     }
 
     @Override
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         completeTaskList.add(t);
         t.setPosCompleteTaskList(completeTaskList.size()-1);
         filteredTaskList.add(posInFiltered, t);
+        updateFragments();
     }
 
     @Override

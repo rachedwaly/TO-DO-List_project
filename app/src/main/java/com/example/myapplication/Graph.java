@@ -152,32 +152,7 @@ public class Graph extends Fragment implements MyFragmentListener {
         llTouchwidth = llTouch.getMeasuredWidth();
         Log.d("tst","height :" + llTouchheight + "width: " + llTouchwidth);
 
-        int count = llTouch.getChildCount();
-        for(int i= 0; i < count; i++){
-            View view = llTouch.getChildAt(i);
-            if(view instanceof ImageView){
-                Log.d("set touch listener on", String.valueOf(view.getId()));
-                view.setOnTouchListener(movingEventListener);
-            }
-        }
 
-        //添加一个新的任务
-        Button add_btn = myFragmentView.findViewById(R.id.add_btn);
-        add_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText editText1 =(EditText) myFragmentView.findViewById(R.id.edit_effort);
-                int effort = Integer.parseInt(editText1.getText().toString());
-
-                EditText editText2 =(EditText) myFragmentView.findViewById(R.id.edit_urgency);
-                int urgency = Integer.parseInt(editText2.getText().toString());
-
-                Log.d("da","effort :" + effort + "urgency: " + urgency);
-
-//                createTask(effort, urgency);
-                popup.setVisibility(View.INVISIBLE);
-            }
-        });
 
         FloatingActionButton add_btn_general = myFragmentView.findViewById(R.id.add_btn_general);
         add_btn_general.setOnClickListener(new View.OnClickListener() {
@@ -263,10 +238,12 @@ public class Graph extends Fragment implements MyFragmentListener {
                     listener.remove(position);
                     listener.addTask(position,currentTask);
                     listener.updateTagList(currentTask.getTags());
+                    updateView();
 //                    mAdapter.notifyDataSetChanged();
 
                     for(int i = 0 ; i < tasks.size(); i++){
-                        Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
+                        //Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
+                        Log.d("x,y:", String.valueOf(effort)+" "+String.valueOf(urgent));
                     }
 
                     v = null;
@@ -352,16 +329,9 @@ public class Graph extends Fragment implements MyFragmentListener {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void updateView() {
         readData();
-        int count = llTouch.getChildCount();
-        for(int i= 0; i < count; i++){
-            View view = llTouch.getChildAt(i);
-            if(view instanceof ImageView){
-                Log.d("set touch listener on", String.valueOf(view.getId()));
-                view.setOnTouchListener(movingEventListener);
-            }
-        }
     }
 }
