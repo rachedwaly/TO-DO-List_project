@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -111,7 +112,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
     private String mPresetsFilePath;
     private ArrayList<String> mCategories;
     private MyTaskListListener listener;
-
 
     public Main() {
         // Required empty public constructor

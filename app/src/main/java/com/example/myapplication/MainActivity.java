@@ -2,11 +2,14 @@ package com.example.myapplication;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     private HashSet<String> tagList;
     private HashSet<String> activeTagList;
 
+    private Button filterButton;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -49,6 +54,17 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         completeTaskList =  new ArrayList<Task>();
         tagList =  new  HashSet<String>();
         activeTagList =  new  HashSet<String>();
+
+        filterButton =  (Button) findViewById(R.id.filterMenuButton);
+
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                FilterMenuFragment filterMenuFragment=new FilterMenuFragment();
+                filterMenuFragment.show(fm,"Filter Menu");
+            }
+        });
 
         initializeJSONTasks();
         initializeJSONPresets();
@@ -115,6 +131,31 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     @Override
     public Task getTask(int posInFiltered){
         return filteredTaskList.get(posInFiltered);
+    }
+
+    @Override
+    public HashSet<String> getTagList() {
+        return tagList;
+    }
+
+    @Override
+    public HashSet<String> getActiveTagList() {
+        return activeTagList;
+    }
+
+    @Override
+    public void activateTag(String tag) {
+        activeTagList.add(tag);
+    }
+
+    @Override
+    public void deactivateTag(String tag) {
+        activeTagList.remove(tag);
+    }
+
+    @Override
+    public void addNewTag(String tag) {
+        tagList.add(tag);
     }
 
     public Boolean isFiltered(Task t){  // true if element should be displayed
