@@ -224,15 +224,16 @@ public class Graph extends Fragment implements MyFragmentListener {
 
 //                    taskname.setText(data_name.get(v.getId()));
 
-
+                    int dx1 = lastX - x;
+                    int dy1 = lastY - y;
 
 
                     //Log.d("x", String.valueOf(lastX));
                     //Log.d("y", String.valueOf(lastY));
                     taskname.setText(tasks.get(v.getId()).getName());
-                    int scale = llTouchwidth / 5;
-                    int effort = Math.round((lastX - 150) / scale) + 1;
-                    int urgent = Math.round((1500 - lastY)/ scale) + 1;
+                    int scale = llTouchwidth / 6;
+                    int effort = tasks.get(v.getId()).getEffort() + Math.round(dx1 / scale);
+                    int urgent = tasks.get(v.getId()).getUrgency() - Math.round((dy1)/ scale);
                     taskeffort.setText("Effort: " + effort);
                     taskurgent.setText("Urgent: "  + urgent);
 
