@@ -88,7 +88,7 @@ class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 }
 
-public class Main extends Fragment implements AdapterForCards.OnCardListener, CardDetailedFragment.EditTaskListener {
+public class Main extends Fragment implements AdapterForCards.OnCardListener, CardDetailedFragment.EditTaskListener, MyFragmentListener {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -123,6 +123,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         super.onAttach(context);
         try {
             listener = (MyTaskListListener) context;
+            listener.registerFragmentListener(((MyFragmentListener)this));
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
         }
@@ -363,6 +364,11 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    public void updateView() {
+        mAdapter.notifyDataSetChanged();
     }
 }
 

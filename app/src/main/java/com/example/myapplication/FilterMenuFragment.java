@@ -17,6 +17,8 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.Arrays;
+
 public class FilterMenuFragment extends DialogFragment {
     private ChipGroup tags;
     private Button filterButton;
@@ -87,12 +89,12 @@ public class FilterMenuFragment extends DialogFragment {
     }
 
     public void launchFilter(){
-        EditTaskListener listener= (EditTaskListener) getTargetFragment();
+        taskListListener.activateTag("exam");
         dismiss();
     }
 
     public void undoFilter(){
-        EditTaskListener listener= (EditTaskListener) getTargetFragment();
+        taskListListener.deactivateAllTags();
         dismiss();
     }
 }
