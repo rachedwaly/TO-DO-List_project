@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -84,6 +85,13 @@ public class TagsPickerFragment extends DialogFragment {
             if (isSelected(tag)) {
                 chip.setChecked(true);
             }
+
+            chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    
+                }
+            });
 
 
             tagsGroup.addView(chip);

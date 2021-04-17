@@ -233,7 +233,6 @@ public class CreateActivity extends AppCompatActivity {
         preset.setSelection(0);
         selectedPreset = currentTask.getPreset();
         name.setText(currentTask.getName());
-        Log.d("category", currentTask.getCategory());
         category.setSelection(categoryAdapter.getPosition(currentTask.getCategory()));
         selectedCategory = currentTask.getCategory();
         dueDate.setText(currentTask.getDueDate());
@@ -241,7 +240,6 @@ public class CreateActivity extends AppCompatActivity {
         selectedRepeater = currentTask.getRepeater();
         dueTime.setText(currentTask.getDueTime());
         description.setText(currentTask.getDescription());
-        Log.d("effort", String.valueOf(currentTask.getEffort()));
         effortSlider.setValue(currentTask.getEffort());
         urgencySlider.setValue(currentTask.getUrgency());
         calendar.setChecked(currentTask.isCalendar());
