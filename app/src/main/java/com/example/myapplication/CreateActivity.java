@@ -68,9 +68,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
 
     private SimpleDateFormat dateFormatter;
 
-    private String taskFilePath;
-    private List<Task> tasks;
-
     private String presetFilePath;
     private List<Preset> presets;
 
@@ -95,10 +92,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         //Load widgets
         findViewsById();
 
-        //Load received objects
-        taskFilePath = getIntent().getStringExtra("tasksPath");
-        Log.d("CreateActivity task", taskFilePath);
-        readTasks();
 
         presetFilePath = getIntent().getStringExtra("presetsPath");
         Log.d("CreateActivity preset", presetFilePath);
@@ -110,19 +103,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         if (requestcode == 2) {
             Button button = (Button) findViewById(R.id.createButton);
             button.setText("Modify");
-        }
-
-        //Add the task in the list if it's a new task
-        Boolean isNew = true;
-        for (Task task : tasks) {
-            if (task.getId() == currentTask.getId()) {
-                isNew = false;
-                currentTask = task;
-            }
-        }
-
-        if (isNew) {
-            tasks.add(currentTask);
         }
 
         //Initialize preset spinner
@@ -145,6 +125,17 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
                 if (pos != 0) {
                     for (Preset p : presets) {
                         if (p.getName().equals(selectedPreset)) {
+
+                            currentTask.getTags().clear();
+                            for (int i=0; i < tags.getChildCount();i++){
+                                Chip chip = (Chip) tags.getChildAt(i);
+                                if (p.getTags().contains(chip.getText().toString())) {
+                                    chip.setVisibility(View.VISIBLE);
+                                    currentTask.getTags().add(chip.getText().toString());
+                                } else {
+                                    chip.setVisibility(View.GONE);
+                                }
+                            }
                             selectedCategory = p.getCategory();
                             effortSlider.setValue(p.getEffort());
                             urgencySlider.setValue(p.getUrgency());
@@ -282,29 +273,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         newPresetName = (EditText) findViewById(R.id.newPresetName);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void readTasks() {
-        // create a reader
-        Reader reader = null;
-        try {
-            Log.d("Read", "try");
-            reader = Files.newBufferedReader(Paths.get(taskFilePath));
-
-            // create Gson instance
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            // convert JSON string to Book object
-            tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
-
-            // print book
-            tasks.forEach(System.out::println);
-
-            // close reader
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void readPresets() {
@@ -422,9 +390,9 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         Intent data = new Intent();
         data.putExtra("categories",categories);
 
-        data.putExtra("position",getIntent().getIntExtra("position",-1));
+        data.putExtra("position", getIntent().getIntExtra("position",-1));
 
-        //Modify the current task with the new entries
+        //Modify the current task with the new entries (tags already updated)
         currentTask.setPreset(selectedPreset);
         currentTask.setName(name.getText().toString());
         currentTask.setCategory(selectedCategory);
@@ -433,7 +401,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         currentTask.setDueTime(dueTime.getText().toString());
         currentTask.setDescription(description.getText().toString());
         currentTask.setEffort((int) effortSlider.getValue());
-        Log.d("Effort", String.valueOf(currentTask.getEffort()));
         currentTask.setUrgency((int) urgencySlider.getValue());
         currentTask.setCalendar(calendar.isChecked());
 
@@ -441,23 +408,9 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        // create a writer
-        Writer writer = null;
-        try {
-            Log.d("Write", "Add/Modify the new task in the JSON file");
-
-            writer = Files.newBufferedWriter(Paths.get(taskFilePath));
-
-            // convert user object to JSON file
-            gson.toJson(tasks, writer);
-
-            // close writer
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // Add the preset if needed
+        Writer writer = null;
         if (newPreset.isChecked()) {
             // Add in the spinner
             ArrayAdapter presetAdapter = (ArrayAdapter) preset.getAdapter();
@@ -465,7 +418,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
 
             // Create the preset
             Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
-                    (int) effortSlider.getValue(), (int) urgencySlider.getValue(), new String[0], calendar.isChecked());
+                    (int) effortSlider.getValue(), (int) urgencySlider.getValue(), currentTask.getTags(), calendar.isChecked());
 
             presets.add(p);
 
@@ -481,34 +434,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        // Test to read the two JSON files
-        // create a reader
-        Reader reader = null;
-        try {
-            Log.d("Read", "Read tasks file");
-            reader = Files.newBufferedReader(Paths.get(taskFilePath));
-
-            // convert JSON string to Book object
-            List<Task> readTasks = Arrays.asList(gson.fromJson(reader, Task[].class));
-
-            // print book
-            readTasks.forEach(System.out::println);
-
-            Log.d("Read", "Read presets file");
-            reader = Files.newBufferedReader(Paths.get(presetFilePath));
-
-            // convert JSON string to Book object
-            List<Preset> readPresets = Arrays.asList(gson.fromJson(reader, Preset[].class));
-
-            // print book
-            readPresets.forEach(System.out::println);
-
-            // close reader
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         setResult(RESULT_OK, data);

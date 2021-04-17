@@ -271,9 +271,9 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
             fileWriter = new FileWriter(presetFile.getAbsoluteFile());
 
             // add premade presets
-            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new String[]{"exam", "urgent"}, true);
-            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new String[]{"project", "hard"}, true);
-            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new String[]{"meeting"}, false);
+            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new HashSet<>(Arrays.asList("exam", "urgent")), true);
+            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
+            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new HashSet<>(Arrays.asList("meeting")), false);
 
             List<Preset> presets = Arrays.asList(newPreset1, newPreset2, newPreset3);
 

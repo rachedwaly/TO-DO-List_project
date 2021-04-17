@@ -302,7 +302,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
     public void openAddTaskActivity() {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
-        intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         intent.putExtra("tagList", listener.getTagList());
@@ -328,7 +327,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
     @Override
     public void openEditTaskActivity(int i) {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
-        intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         intent.putExtra("task", listener.getTask(i));

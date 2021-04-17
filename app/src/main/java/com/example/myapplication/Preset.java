@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class Preset implements Serializable {
     static int ID_COUNT = 0;
@@ -11,10 +12,10 @@ public class Preset implements Serializable {
     String category;
     int effort;
     int urgency;
-    String[] tags;
+    HashSet<String> tags;
     boolean calendar;
 
-    public Preset(String name, String category, int effort, int urgency, String[] tags, boolean calendar) {
+    public Preset(String name, String category, int effort, int urgency, HashSet<String> tags, boolean calendar) {
         this.id = ID_COUNT;
         ID_COUNT += 1;
         this.name = name;
@@ -41,7 +42,7 @@ public class Preset implements Serializable {
         this.urgency = urgency;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(HashSet<String> tags) {
         this.tags = tags;
     }
 
@@ -65,7 +66,7 @@ public class Preset implements Serializable {
         return urgency;
     }
 
-    public String[] getTags() {
+    public HashSet<String> getTags() {
         return tags;
     }
 
@@ -85,7 +86,7 @@ public class Preset implements Serializable {
                 "category='" + category + "', " +
                 "effort=" + effort + ", " +
                 "urgency=" + urgency + ", " +
-                "tags=" + Arrays.toString(tags) + ", " +
+                "tags=" + Arrays.toString(new HashSet[]{tags}) + ", " +
                 "calendar=" + calendar +
                 '}';
     }
