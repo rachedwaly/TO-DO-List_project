@@ -388,5 +388,4 @@ public class Graph extends Fragment {
             e.printStackTrace();
         }
     }
-
 }
