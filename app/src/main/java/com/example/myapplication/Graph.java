@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.util.DisplayMetrics;
@@ -19,8 +22,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,16 +52,17 @@ public class Graph extends Fragment {
 
 
     //smt i did
+    private List<Task> tasks;
     private ArrayList<String> data_name = new ArrayList<String>();
     private ArrayList<Integer> data_effort = new ArrayList<>();
     private ArrayList<Integer> data_urgent = new ArrayList<>();
     private View myFragmentView;
     private RelativeLayout llTouch;//llTouch --> 绘图区域
+    private int llTouchwidth;//llTouch --> 绘图区域
+    private int llTouchheight;//llTouch --> 绘图区域
     private LinearLayout popup;
     private TextView taskname, taskeffort, taskurgent;
     private int index = 0;
-    private int screenWidth;
-    private int screenHeight;
 
 
     private static final String ARG_TASKS = "tasksPath";
@@ -82,6 +95,7 @@ public class Graph extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +107,9 @@ public class Graph extends Fragment {
             mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
         }
 
-
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,24 +120,29 @@ public class Graph extends Fragment {
     }
 
     private void readData(){
-        for(int i = 0 ; i < data_effort.size(); i++){
-            createTask(data_effort.get(i), data_urgent.get(i));
+//        for(int i = 0 ; i < data_effort.size(); i++){
+//            createTask(data_effort.get(i), data_urgent.get(i));
+//        }
+        for(int i = 0 ; i < tasks.size(); i++){
+            Log.d("create task: ", String.valueOf(tasks.get(i).id) + String.valueOf(tasks.get(i).effort) + String.valueOf(tasks.get(i).urgency));
+            createTask(tasks.get(i).id, tasks.get(i).effort, tasks.get(i).urgency);
         }
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void init() {
-
-
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels - 50;
-
         popup = (LinearLayout) myFragmentView.findViewById(R.id.popup);
         llTouch = (RelativeLayout) myFragmentView.findViewById(R.id.ll_touch);
         taskname = (TextView) myFragmentView.findViewById(R.id.taskname);
         taskeffort = (TextView) myFragmentView.findViewById(R.id.taskeffort);
         taskurgent = (TextView) myFragmentView.findViewById(R.id.taskurgent);
+
+        llTouch.measure(0,0);
+
+        llTouchheight = llTouch.getMeasuredHeight();
+        llTouchwidth = llTouch.getMeasuredWidth();
+        Log.d("tst","height :" + llTouchheight + "width: " + llTouchwidth);
 
         int count = llTouch.getChildCount();
         for(int i= 0; i < count; i++){
@@ -147,7 +166,7 @@ public class Graph extends Fragment {
 
                 Log.d("da","effort :" + effort + "urgency: " + urgency);
 
-                createTask(effort, urgency);
+//                createTask(effort, urgency);
                 popup.setVisibility(View.INVISIBLE);
             }
         });
@@ -162,21 +181,24 @@ public class Graph extends Fragment {
         });
 
 
-        data_name.add("task1a");
-        data_name.add("task2a");
-        data_name.add("task3a");
-        data_effort.add(4);
-        data_effort.add(1);
-        data_effort.add(5);
-        data_urgent.add(3);
-        data_urgent.add(1);
-        data_urgent.add(1);
+//        data_name.add("task1a");
+//        data_name.add("task2a");
+//        data_name.add("task3a");
+//        data_effort.add(4);
+//        data_effort.add(1);
+//        data_effort.add(5);
+//        data_urgent.add(3);
+//        data_urgent.add(1);
+//        data_urgent.add(1);
+
+        readTasks();
         readData();
     }
 
     private View.OnTouchListener movingEventListener = new View.OnTouchListener() {
         int lastX, lastY, x, y;
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
@@ -200,8 +222,8 @@ public class Graph extends Fragment {
                         right = left + v.getWidth();
                     }
 
-                    if (right > screenWidth) {
-                        right = screenWidth;
+                    if (right > llTouchwidth) {
+                        right = llTouchwidth;
                         left = right - v.getWidth();
                     }
 
@@ -210,8 +232,8 @@ public class Graph extends Fragment {
                         bottom = top + v.getHeight();
                     }
 
-                    if (bottom > screenHeight) {
-                        bottom = screenHeight;
+                    if (bottom > llTouchheight) {
+                        bottom = llTouchheight;
                         top = bottom - v.getHeight();
                     }
 
@@ -224,52 +246,66 @@ public class Graph extends Fragment {
                 case MotionEvent.ACTION_UP:
 //                    Log.d("selectedview", String.valueOf(selectedView.getId()));
 
-                    taskname.setText(data_name.get(v.getId()));
-                    int effort = Math.round(lastX / 100);
-                    int urgent = Math.round(1500 - lastY)/100;
+//                    taskname.setText(data_name.get(v.getId()));
+                    Log.d("x", String.valueOf(lastX));
+                    Log.d("y", String.valueOf(lastY));
+                    taskname.setText(tasks.get(v.getId()).name);
+                    int scale = llTouchwidth / 5;
+                    int effort = Math.round((lastX - 150) / scale) + 1;
+                    int urgent = Math.round((1500 - lastY)/ scale) + 1;
                     taskeffort.setText("Effort: " + effort);
                     taskurgent.setText("Urgent: "  + urgent);
-                    Log.d("x", String.valueOf(effort));
-                    Log.d("y", String.valueOf(urgent));
+
+                    Task currentTask = tasks.get(v.getId());
+
+                    //Modify the current task with the new entries
+                    currentTask.setEffort(effort);
+                    currentTask.setUrgency(urgent);
+
+                    // create Gson instance
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+                    // create a writer
+                    Writer writer = null;
+                    try {
+                        Log.d("Write", "Add/Modify the new task in the JSON file");
+
+                        writer = Files.newBufferedWriter(Paths.get(mTasksFilePath));
+
+                        // convert user object to JSON file
+                        gson.toJson(tasks, writer);
+
+                        // close writer
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                     v = null;
-
-
-
-//                    //检测移动的距离，如果很微小可以认为是点击事件
-//                    if (Math.abs(event.getRawX() - x) < 10 && Math.abs(event.getRawY() - y) < 10) {
-//                        try {
-//                            Field field = View.class.getDeclaredField("mListenerInfo");
-//                            field.setAccessible(true);
-//                            Object object = field.get(v);
-//                            field = object.getClass().getDeclaredField("mOnClickListener");
-//                            field.setAccessible(true);
-//                            object = field.get(object);
-//                            if (object != null && object instanceof View.OnClickListener) {
-//                                ((View.OnClickListener) object).onClick(v);
-//                            }
-//                        } catch (Exception e) {
-//                        }
-//                    }
                     break;
             }
             return true;
         }
     };
 
-    private void createTask(float x, float y) {
+    private void createTask(int index, float x, float y) {
         ImageView iv = new ImageView(getActivity());
         switch (index % 3){
             case 0 : iv.setImageResource(R.drawable.task1); break;
             case 1 : iv.setImageResource(R.drawable.task2); break;
             case 2 : iv.setImageResource(R.drawable.task3); break;
         }
-        iv.setId(index++);
-        int left = Math.round(x * 50);
-        int bottom = Math.round(y * 50);
-        int top = 300 - bottom;
-        int right = 300 - left;
+//        iv.setId(index++);
+        iv.setId(index);
+        int param = llTouchheight / 6;
+        int left = Math.round(x * param);
+        int bottom = Math.round(y * param);
+        int top = llTouchheight - bottom;
+        int right = llTouchwidth - left;
+        Log.d("tst2","left:"  + left + "top:" + top);
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(left, top, right, bottom);
+        lp.setMargins(left + 1, top + 10, right +1, bottom + 10);
         iv.setLayoutParams(lp);
 
         iv.setClickable(true);
@@ -299,4 +335,29 @@ public class Graph extends Fragment {
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void readTasks() {
+        // create a reader
+        Reader reader = null;
+        try {
+            Log.d("Read", "try");
+            reader = Files.newBufferedReader(Paths.get(mTasksFilePath));
+
+            // create Gson instance
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            // convert JSON string to Book object
+            tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
+
+            // print book
+            tasks.forEach(System.out::println);
+
+            // close reader
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
