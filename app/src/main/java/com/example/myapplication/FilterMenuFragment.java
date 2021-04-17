@@ -42,7 +42,7 @@ public class FilterMenuFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view=inflater.inflate(R.layout.card_detailed_popup,container,false);
+        View view=inflater.inflate(R.layout.filter_menu_popup,container,false);
 
         tags = view.findViewById(R.id.tags);
         filterButton=view.findViewById(R.id.filterButton);
