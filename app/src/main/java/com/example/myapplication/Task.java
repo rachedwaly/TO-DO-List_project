@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Task implements Serializable {
     String description;
     int effort;
     int urgency;
-    String[] tags;
+    ArrayList<String> tags;
     boolean calendar;
 
     public Task() {
@@ -32,11 +33,13 @@ public class Task implements Serializable {
         this.description = "";
         this.effort = 1;
         this.urgency = 1;
-        this.tags = new String[0];
+        this.tags = new ArrayList<String>();
         this.calendar = false;
     }
 
-    public Task(String preset, String name, String category, String dueDate, String repeater, String dueTime, String description, int effort, int urgency, String[] tags, boolean calendar) {
+    public Task(String preset, String name, String category, String dueDate,
+                String repeater, String dueTime, String description, int effort,
+                int urgency, ArrayList<String> tags, boolean calendar) {
         this.id = ID_COUNT;
         this.preset = preset;
         this.name = name;
@@ -91,7 +94,7 @@ public class Task implements Serializable {
         this.urgency = urgency;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 
@@ -131,7 +134,7 @@ public class Task implements Serializable {
         return urgency;
     }
 
-    public String[] getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
@@ -156,7 +159,7 @@ public class Task implements Serializable {
                 "description='" + description + "', " +
                 "effort=" + effort + ", " +
                 "urgency=" + urgency + ", " +
-                "tags=" + Arrays.toString(tags) + ", " +
+                "tags=" + Arrays.toString(new ArrayList[]{tags}) + ", " +
                 "calendar=" + calendar +
                 '}';
     }
