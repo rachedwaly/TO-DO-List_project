@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class CreateActivity extends AppCompatActivity {
@@ -72,7 +73,7 @@ public class CreateActivity extends AppCompatActivity {
 
     private Task currentTask;
 
-    private ArrayList<String> tagsList;
+    private HashSet<String> tagsList;
     private ArrayList<String> categories;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -81,15 +82,7 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        tagsList = new ArrayList<String>();
-        tagsList.add("INF");
-        tagsList.add("C++");
-        tagsList.add("Test");
-        tagsList.add("meeting");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
-        tagsList.add("IGR");
+        tagsList = (HashSet<String>) (getIntent().getSerializableExtra("tagList"));
 
         /*ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);*/
@@ -384,7 +377,7 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setEffort((int) effortSlider.getValue());
         Log.d("Effort", String.valueOf(currentTask.getEffort()));
         currentTask.setUrgency((int) urgencySlider.getValue());
-        currentTask.setTags(new ArrayList<String>());
+        currentTask.setTags(new HashSet<String>());
         currentTask.setCalendar(calendar.isChecked());
         data.putExtra("task", currentTask);
         // create Gson instance

@@ -2,28 +2,30 @@ package com.example.myapplication;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class Task implements Serializable {
     static int ID_COUNT = 0;
 
-    int id;
-    String preset;
-    String name;
-    String category;
-    String dueDate;
-    String repeater;
-    String dueTime;
-    String description;
-    int effort;
-    int urgency;
-    ArrayList<String> tags;
-    boolean calendar;
+    private int id;
+    private int posCompleteTaskList;
+    private String preset;
+    private String name;
+    private String category;
+    private String dueDate;
+    private String repeater;
+    private String dueTime;
+    private String description;
+    private int effort;
+    private int urgency;
+    private HashSet<String> tags;
+    private  boolean calendar;
 
     public Task() {
         this.id = ID_COUNT;
+        this.posCompleteTaskList = ID_COUNT;
         this.preset = "No preset";
         this.name = "";
         this.category = "No category";
@@ -33,14 +35,13 @@ public class Task implements Serializable {
         this.description = "";
         this.effort = 1;
         this.urgency = 1;
-        this.tags = new ArrayList<String>();
+        this.tags = new HashSet<String>();
         this.calendar = false;
     }
 
-    public Task(String preset, String name, String category, String dueDate,
-                String repeater, String dueTime, String description, int effort,
-                int urgency, ArrayList<String> tags, boolean calendar) {
+    public Task(String preset, String name, String category, String dueDate, String repeater, String dueTime, String description, int effort, int urgency, HashSet<String> tags, boolean calendar) {
         this.id = ID_COUNT;
+        this.posCompleteTaskList = ID_COUNT;
         this.preset = preset;
         this.name = name;
         this.category = category;
@@ -94,9 +95,7 @@ public class Task implements Serializable {
         this.urgency = urgency;
     }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
+    public void setTags(HashSet<String> tags) { this.tags = tags;}
 
     public void setCalendar(boolean calendar) {
         this.calendar = calendar;
@@ -134,7 +133,7 @@ public class Task implements Serializable {
         return urgency;
     }
 
-    public ArrayList<String> getTags() {
+    public HashSet<String> getTags() {
         return tags;
     }
 
@@ -159,8 +158,16 @@ public class Task implements Serializable {
                 "description='" + description + "', " +
                 "effort=" + effort + ", " +
                 "urgency=" + urgency + ", " +
-                "tags=" + Arrays.toString(new ArrayList[]{tags}) + ", " +
+                "tags=" + tags.toString() + ", " +
                 "calendar=" + calendar +
                 '}';
+    }
+
+    public int getPosCompleteTaskList() {
+        return posCompleteTaskList;
+    }
+
+    public void setPosCompleteTaskList(int posCompleteTaskList) {
+        this.posCompleteTaskList = posCompleteTaskList;
     }
 }

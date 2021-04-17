@@ -51,50 +51,30 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
             >
-<!--            <ImageView-->
-<!--                android:id="@+id/task1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@drawable/task1"-->
-<!--                android:layout_marginLeft="50dp"-->
-<!--                android:layout_marginTop="250dp"></ImageView>-->
-<!--            <ImageView-->
-<!--                android:id="@+id/task2"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@drawable/task2"-->
-<!--                android:layout_marginLeft="150dp"-->
-<!--                android:layout_marginTop="50dp"></ImageView>-->
-<!--            <ImageView-->
-<!--                android:id="@+id/task3"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@drawable/task3"-->
-<!--                android:layout_marginLeft="250dp"-->
-<!--                android:layout_marginTop="150dp"></ImageView>-->
         </RelativeLayout>
-
-
         <!--        y axis-->
         <TableLayout
             android:id="@+id/yaxis"
             android:layout_width="50dp"
-            android:layout_height="500dp"
+            android:layout_height="300dp"
             android:layout_toLeftOf="@id/ll_touch"
-            android:background="#000">
+            android:background="#000"
+            android:layout_marginTop="50dp">
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Urgent"></TextView>
+                    android:text="Urgent"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
             </TableRow>
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,7 +85,7 @@
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -116,7 +96,7 @@
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -127,7 +107,7 @@
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -138,7 +118,7 @@
             <TableRow
                 android:layout_weight="1"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginRight="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -146,61 +126,64 @@
                     android:textAlignment="textEnd"
                     android:gravity="end"></TextView>
             </TableRow>
+        </TableLayout>
+        <!--        x axis-->
+        <TableLayout
+            android:id="@+id/xaxis"
+            android:layout_width="350dp"
+            android:layout_height="20dp"
+            android:stretchColumns="*"
+            android:background="#000"
+            android:layout_below="@+id/ll_touch"
+            android:layout_centerHorizontal="true">
             <TableRow
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#fff"
-                android:layout_marginRight="0.5dp">
+                android:layout_marginTop="1dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textAlignment="textEnd"
+                    android:gravity="end"
+                    ></TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:textAlignment="textEnd"
                     android:gravity="end"></TextView>
-            </TableRow>
-        </TableLayout>
-<!--        x axis-->
-        <TableLayout
-            android:id="@+id/xaxis"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:stretchColumns="*"
-            android:background="#000"
-            android:layout_below="@+id/ll_touch"
-            android:layout_marginTop="80dp"
-            android:layout_marginLeft="15dp">
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#fff"
-                android:layout_marginTop="0.5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"></TextView>
+                    android:text="2"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1"></TextView>
+                    android:text="3"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2"></TextView>
+                    android:text="4"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3"></TextView>
+                    android:text="5"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4"></TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5"></TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Effort"></TextView>
+                    android:text="Effort"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"></TextView>
             </TableRow>
         </TableLayout>
 
