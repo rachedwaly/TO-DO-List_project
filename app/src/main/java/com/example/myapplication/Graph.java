@@ -138,7 +138,7 @@ public class Graph extends Fragment {
 //            createTask(data_effort.get(i), data_urgent.get(i));
 //        }
         for(int i = 0 ; i < tasks.size(); i++){
-            Log.d("create task: ", String.valueOf(tasks.get(i).id) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
+            Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
             createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
         }
 
