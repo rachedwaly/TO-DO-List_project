@@ -115,14 +115,24 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
             fileWriter = new FileWriter(taskFile.getAbsoluteFile());
 
             // add premade tasks
+            ArrayList<String> tags1 = new ArrayList<>();
+            tags1.add("exam");
+            tags1.add("urgent");
             Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
-                    "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);
+                    "12:13", "My description", 3, 4, tags1, true);
             Task.ID_COUNT += 1;
+
+            ArrayList<String> tags2 = new ArrayList<>();
+            tags2.add("meeting");
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new String[]{"meeting"}, false);
+                    "16:00", "My description", 1, 1, tags2, false);
             Task.ID_COUNT += 1;
+
+            ArrayList<String> tags3 = new ArrayList<>();
+            tags3.add("project");
+            tags3.add("hard");
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
-                    "23:59", "My description", 4, 2, new String[]{"project", "hard"}, true);
+                    "23:59", "My description", 4, 2, tags3, true);
             Task.ID_COUNT += 1;
 
 

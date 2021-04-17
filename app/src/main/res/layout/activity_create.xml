@@ -242,42 +242,50 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Importance" />
+                android:text="Effort" />
 
             <View
-                android:id="@+id/view10"
-                android:layout_width="match_parent"
+                android:id="@+id/view12"
+                android:layout_width="10dp"
                 android:layout_height="match_parent" />
 
-            <LinearLayout
-                android:id="@+id/importance"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <!-- Discrete slider -->
+            <com.google.android.material.slider.Slider
+                android:id="@+id/effort"
+                android:layout_width="309dp"
+                android:layout_span="2"
+                android:stepSize="1.0"
+                android:valueFrom="0.0"
+                android:valueTo="7.0" />
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/effort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Effort: 1" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-                <TextView
-                    android:id="@+id/urgency"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Urgency: 1" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/button3"
+            <TextView
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Modify"
-                android:onClick="onModifyClicked"/>
+                android:text="Urgency" />
 
+            <View
+                android:id="@+id/view13"
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <!-- Discrete slider -->
+            <com.google.android.material.slider.Slider
+                android:id="@+id/urgency"
+                android:layout_width="309dp"
+                android:layout_span="2"
+                android:stepSize="1.0"
+                android:valueFrom="0.0"
+                android:valueTo="7.0" />
         </TableRow>
 
         <TableRow
@@ -298,7 +306,7 @@
 
             <HorizontalScrollView
                 android:layout_width="10dp"
-                android:layout_height="match_parent">
+                android:layout_height="50dp">
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/tags"
@@ -343,11 +351,14 @@
             </HorizontalScrollView>
 
 
-
             <ImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="false"
+                android:background="#FFFFFF"
+                android:onClick="showTagsDialog"
+                android:tint="#000000"
                 app:srcCompat="@android:drawable/ic_menu_add" />
         </TableRow>
 
