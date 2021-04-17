@@ -55,16 +55,12 @@ public class Graph extends Fragment {
 
     //smt i did
     private List<Task> tasks;
-    private ArrayList<String> data_name = new ArrayList<String>();
-    private ArrayList<Integer> data_effort = new ArrayList<>();
-    private ArrayList<Integer> data_urgent = new ArrayList<>();
     private View myFragmentView;
     private RelativeLayout llTouch;//llTouch --> 绘图区域
     private int llTouchwidth;//llTouch --> 绘图区域
     private int llTouchheight;//llTouch --> 绘图区域
     private LinearLayout popup;
     private TextView taskname, taskeffort, taskurgent;
-    private int index = 0;
     private MyTaskListListener listener;
 
 
@@ -79,14 +75,6 @@ public class Graph extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Graph.
-     */
     // TODO: Rename and change types and number of parameters
     public static Graph newInstance(String tasksFilePath, String presetsFilePath, ArrayList<String> categories) {
         Graph fragment = new Graph();
@@ -134,17 +122,18 @@ public class Graph extends Fragment {
     }
 
     private void readData(){
-//        for(int i = 0 ; i < data_effort.size(); i++){
-//            createTask(data_effort.get(i), data_urgent.get(i));
+//        json version
+//        for(int i = 0 ; i < tasks.size(); i++){
+//            Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
+//            createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
 //        }
+
+        //filted data
+        tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
             createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
         }
-
-
-
-
 
     }
 
@@ -198,18 +187,7 @@ public class Graph extends Fragment {
             }
         });
 
-
-//        data_name.add("task1a");
-//        data_name.add("task2a");
-//        data_name.add("task3a");
-//        data_effort.add(4);
-//        data_effort.add(1);
-//        data_effort.add(5);
-//        data_urgent.add(3);
-//        data_urgent.add(1);
-//        data_urgent.add(1);
-
-        readTasks();
+//        readTasks();
         readData();
     }
 
@@ -274,31 +252,21 @@ public class Graph extends Fragment {
                     taskeffort.setText("Effort: " + effort);
                     taskurgent.setText("Urgent: "  + urgent);
 
-                    Task currentTask = tasks.get(v.getId());
+                    int position = v.getId();
+                    Task currentTask = listener.getTask(position);
 
                     //Modify the current task with the new entries
                     currentTask.setEffort(effort);
                     currentTask.setUrgency(urgent);
 
-                    // create Gson instance
-                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    listener.remove(position);
+                    listener.addTask(position,currentTask);
+                    listener.updateTagList(currentTask.getTags());
+//                    mAdapter.notifyDataSetChanged();
 
-                    // create a writer
-                    Writer writer = null;
-                    try {
-                        Log.d("Write", "Add/Modify the new task in the JSON file");
-
-                        writer = Files.newBufferedWriter(Paths.get(mTasksFilePath));
-
-                        // convert user object to JSON file
-                        gson.toJson(tasks, writer);
-
-                        // close writer
-                        writer.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    for(int i = 0 ; i < tasks.size(); i++){
+                        Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
                     }
-
 
                     v = null;
                     break;
@@ -337,56 +305,47 @@ public class Graph extends Fragment {
         llTouch.addView(iv);
     }
 
-    private void showAddPopup(){
-        popup.setVisibility(View.VISIBLE);
-    }
-
     public void openAddTaskActivity() {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
         intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
+        intent.putExtra("tagList", listener.getTagList());
+        intent.putExtra("requestCode", 1);
         Task newTask = new Task();
         /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
                 "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
         Task.ID_COUNT += 1;
+
+        // TODO : move this to onActivity result
+
+
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 mCategories = data.getStringArrayListExtra("categories");
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(newTask);
+                listener.updateTagList(newTask.getTags());
+                //mCategories.forEach(System.out::println);
+            }
+        }
+        if (requestCode == 2) {
 
-                //For testing
-                mCategories.forEach(System.out::println);
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+                int position=data.getIntExtra("position",-1);
+
+                listener.remove(position);
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(position,newTask);
+                listener.updateTagList(newTask.getTags());
             }
         }
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void readTasks() {
-        // create a reader
-        Reader reader = null;
-        try {
-            Log.d("Read", "try");
-            reader = Files.newBufferedReader(Paths.get(mTasksFilePath));
-
-            // create Gson instance
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-            // convert JSON string to Book object
-            tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
-
-            // print book
-            tasks.forEach(System.out::println);
-
-            // close reader
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
