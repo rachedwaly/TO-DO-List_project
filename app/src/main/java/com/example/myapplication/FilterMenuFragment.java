@@ -20,9 +20,8 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.Arrays;
 
 public class FilterMenuFragment extends DialogFragment {
-    private ChipGroup tags;
-    private Button filterButton;
-    private Button deleteButton;
+    private ChipGroup tagsGroup;
+    private Button undoFilterButton;
 
     private MyTaskListListener taskListListener;
 
@@ -46,20 +45,11 @@ public class FilterMenuFragment extends DialogFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view=inflater.inflate(R.layout.filter_menu_popup,container,false);
 
-        tags = view.findViewById(R.id.tags);
-        filterButton=view.findViewById(R.id.filterButton);
-        deleteButton=view.findViewById(R.id.undoFilterButton);
+        tagsGroup = view.findViewById(R.id.tagsGroup);
 
+        undoFilterButton=view.findViewById(R.id.undoFilterButton);
 
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchFilter();
-            }
-        });
-
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        undoFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 undoFilter();
@@ -67,7 +57,7 @@ public class FilterMenuFragment extends DialogFragment {
         });
 
         for (String s: taskListListener.getTagList()) {
-            tags.addView(createChip(s));
+            tagsGroup.addView(createChip(s));
 
         }
 
@@ -84,13 +74,21 @@ public class FilterMenuFragment extends DialogFragment {
     public Chip createChip(String nameOfTag){
         Chip chip=new Chip(getContext());
         chip.setText(nameOfTag);
-        chip.setCloseIconVisible(false);
+        chip.setCheckable(true);
+        chip.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Chip c = (Chip) v;
+                                        if (chip.isChecked()){
+                                            taskListListener.activateTag(chip.getText().toString());
+                                        }
+                                        else{
+                                            taskListListener.deactivateTag(chip.getText().toString());
+                                        }
+                                    }
+                                }
+        );
         return chip;
-    }
-
-    public void launchFilter(){
-        taskListListener.activateTag("exam");
-        dismiss();
     }
 
     public void undoFilter(){
