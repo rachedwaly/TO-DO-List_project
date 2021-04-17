@@ -15,5 +15,6 @@ public interface MyTaskListListener {
     public void deactivateTag(String tag);
     public void deactivateAllTags();
     public void updateTagList(HashSet<String> taskTagList);
-    public void registerFragmentListener(MyFragmentListener fragmentListener);
+    public void registerFragmentListener(MyFragmentListener fragmentListener, int position);
+    public void updateFragments();
 }

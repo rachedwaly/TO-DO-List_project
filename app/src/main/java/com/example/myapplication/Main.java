@@ -123,7 +123,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         super.onAttach(context);
         try {
             listener = (MyTaskListListener) context;
-            listener.registerFragmentListener(((MyFragmentListener)this));
+            listener.registerFragmentListener(((MyFragmentListener)this), 1);
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
         }
@@ -320,10 +320,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
 
 
-
-
-
-
     @Override
     public void openEditTaskActivity(int i) {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
@@ -345,7 +341,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
-                mAdapter.notifyDataSetChanged();
+                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -359,7 +355,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
-                mAdapter.notifyDataSetChanged();
+                listener.updateFragments();
             }
         }
     }
