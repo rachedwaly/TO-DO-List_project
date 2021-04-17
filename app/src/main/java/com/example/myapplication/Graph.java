@@ -41,7 +41,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link Graph#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Graph extends Fragment {
+public class Graph extends Fragment implements MyFragmentListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,7 +91,7 @@ public class Graph extends Fragment {
         super.onAttach(context);
         try {
             listener = (MyTaskListListener) context;
-            listener.registerFragmentListener(((MyFragmentListener)this));
+            listener.registerFragmentListener(((MyFragmentListener)this), 2);
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
         }
@@ -129,6 +129,7 @@ public class Graph extends Fragment {
 //        }
 
         //filted data
+        llTouch.removeAllViews();
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
@@ -332,6 +333,7 @@ public class Graph extends Fragment {
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
+                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -345,6 +347,20 @@ public class Graph extends Fragment {
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
+                listener.updateFragments();
+            }
+        }
+    }
+
+    @Override
+    public void updateView() {
+        readData();
+        int count = llTouch.getChildCount();
+        for(int i= 0; i < count; i++){
+            View view = llTouch.getChildAt(i);
+            if(view instanceof ImageView){
+                Log.d("set touch listener on", String.valueOf(view.getId()));
+                view.setOnTouchListener(movingEventListener);
             }
         }
     }
