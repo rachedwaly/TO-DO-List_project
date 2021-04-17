@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -107,12 +108,18 @@ public class CreateActivity extends AppCompatActivity {
 
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
+        int requestcode = getIntent().getIntExtra("requestCode", 1);
+        if (requestcode == 2) {
+            Button button = (Button) findViewById(R.id.createButton);
+            button.setText("Modify");
+        }
+
         //Add the task in the list if it's a new task
         Boolean isNew = true;
         for (Task task : tasks) {
             if (task.getId() == currentTask.getId()) {
                 isNew = false;
-                //currentTask = task;
+                currentTask = task;
             }
         }
 
@@ -222,19 +229,11 @@ public class CreateActivity extends AppCompatActivity {
         }
 
 
-        //Initialize effort slider
-        effortSlider.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                //Use the value
-
-            }
-        });
-
         //Initialize display regarding the given task (new task or modifying a task?)
-        preset.setSelection(presetAdapter.getPosition(currentTask.getPreset()));
+        preset.setSelection(0);
         selectedPreset = currentTask.getPreset();
         name.setText(currentTask.getName());
+        Log.d("category", currentTask.getCategory());
         category.setSelection(categoryAdapter.getPosition(currentTask.getCategory()));
         selectedCategory = currentTask.getCategory();
         dueDate.setText(currentTask.getDueDate());
@@ -242,6 +241,7 @@ public class CreateActivity extends AppCompatActivity {
         selectedRepeater = currentTask.getRepeater();
         dueTime.setText(currentTask.getDueTime());
         description.setText(currentTask.getDescription());
+        Log.d("effort", String.valueOf(currentTask.getEffort()));
         effortSlider.setValue(currentTask.getEffort());
         urgencySlider.setValue(currentTask.getUrgency());
         calendar.setChecked(currentTask.isCalendar());
@@ -384,10 +384,11 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setDueTime(dueTime.getText().toString());
         currentTask.setDescription(description.getText().toString());
         currentTask.setEffort((int) effortSlider.getValue());
+        Log.d("Effort", String.valueOf(currentTask.getEffort()));
         currentTask.setUrgency((int) urgencySlider.getValue());
         currentTask.setTags(new ArrayList<String>());
         currentTask.setCalendar(calendar.isChecked());
-        data.putExtra("task",currentTask);
+        data.putExtra("task", currentTask);
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -415,7 +416,7 @@ public class CreateActivity extends AppCompatActivity {
 
             // Create the preset
             Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
-                    (int) effortSlider.getValue(), (int) effortSlider.getValue(), new String[0], calendar.isChecked());
+                    (int) effortSlider.getValue(), (int) urgencySlider.getValue(), new String[0], calendar.isChecked());
 
             presets.add(p);
 
