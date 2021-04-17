@@ -1,7 +1,10 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,7 +42,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateActivity extends AppCompatActivity implements TagsPickerFragment.onTagsEventListener {
     private static final String FILE_NAME = "tasks.json";
     //UI References
     private Spinner preset;
@@ -75,6 +78,8 @@ public class CreateActivity extends AppCompatActivity {
 
     private HashSet<String> tagsList;
     private ArrayList<String> categories;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -238,7 +243,7 @@ public class CreateActivity extends AppCompatActivity {
         calendar.setChecked(currentTask.isCalendar());
 
         //Initialize the tags chip group
-        for (String tag : currentTask.getTags()) {
+        for (String tag : tagsList) {
             Chip chip = new Chip(this);
             chip.setText(tag);
             chip.setCloseIconVisible(true);
@@ -246,8 +251,15 @@ public class CreateActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     chip.setVisibility(View.GONE);
+                    currentTask.getTags().remove(tag);
                 }
             });
+
+            if (currentTask.getTags().contains(tag)) {
+                chip.setVisibility(View.VISIBLE);
+            } else {
+                chip.setVisibility(View.GONE);
+            }
 
             tags.addView(chip);
         }
@@ -335,6 +347,52 @@ public class CreateActivity extends AppCompatActivity {
         newFragment.show(fm, "fragment_tags");
     }
 
+    @Override
+    public void addTags(String s) {
+        currentTask.getTags().add(s);
+
+        for (int i=0; i < tags.getChildCount();i++){
+            Chip chip = (Chip) tags.getChildAt(i);
+            if (chip.getText().toString().equals(s)) {
+                chip.setVisibility(View.VISIBLE);
+            }
+        }
+
+    }
+
+    @Override
+    public void addNewTags(String s) {
+        tagsList.add(s);
+        currentTask.getTags().add(s);
+
+        Chip chip = new Chip(this);
+        chip.setText(s);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chip.setVisibility(View.GONE);
+                currentTask.getTags().remove(s);
+            }
+        });
+
+        tags.addView(chip);
+
+    }
+
+    @Override
+    public void removeTags(String s) {
+        currentTask.getTags().remove(s);
+
+        for (int i=0; i < tags.getChildCount();i++){
+            Chip chip = (Chip) tags.getChildAt(i);
+            if (chip.getText().toString().equals(s)) {
+                chip.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
     public void onPresetCheckboxClicked(View view) {
         // Is the view now checked?
         boolean checked = newPreset.isChecked();
@@ -379,6 +437,7 @@ public class CreateActivity extends AppCompatActivity {
         currentTask.setUrgency((int) urgencySlider.getValue());
         currentTask.setTags(new HashSet<String>());
         currentTask.setCalendar(calendar.isChecked());
+
         data.putExtra("task", currentTask);
         // create Gson instance
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
