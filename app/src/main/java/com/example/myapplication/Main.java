@@ -320,7 +320,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
 
 
-    @Override
+
     public void openEditTaskActivity(int i) {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
         intent.putExtra("presetsPath", mPresetsFilePath);
