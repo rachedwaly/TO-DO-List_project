@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,7 +42,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link Graph#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Graph extends Fragment implements MyFragmentListener {
+public class Graph extends Fragment implements MyFragmentListener,CardDetailedFragment.EditTaskListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -63,7 +64,7 @@ public class Graph extends Fragment implements MyFragmentListener {
     private TextView taskname, taskeffort, taskurgent;
     private MyTaskListListener listener;
 
-
+    private GestureDetector gestureDetector;
     private static final String ARG_TASKS = "tasksPath";
     private static final String ARG_PRESETS = "presetsPath";
     private static final String ARG_CATEGORIES = "categories";
@@ -145,7 +146,7 @@ public class Graph extends Fragment implements MyFragmentListener {
         taskname = (TextView) myFragmentView.findViewById(R.id.taskname);
         taskeffort = (TextView) myFragmentView.findViewById(R.id.taskeffort);
         taskurgent = (TextView) myFragmentView.findViewById(R.id.taskurgent);
-
+        gestureDetector = new GestureDetector(getActivity(), new SingleTapConfirm());
         llTouch.measure(0,0);
 
         llTouchheight = llTouch.getMeasuredHeight();
@@ -173,6 +174,13 @@ public class Graph extends Fragment implements MyFragmentListener {
         @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            if (gestureDetector.onTouchEvent(event)){
+                onPointClick(v.getId());
+                return true;
+            }
+            else{
+
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     lastX = (int) event.getRawX();
@@ -258,6 +266,7 @@ public class Graph extends Fragment implements MyFragmentListener {
                     v = null;
                     break;
             }
+            }
             return true;
         }
     };
@@ -289,6 +298,7 @@ public class Graph extends Fragment implements MyFragmentListener {
             }
         });
         iv.setOnTouchListener(movingEventListener);
+
         llTouch.addView(iv);
     }
 
@@ -309,6 +319,41 @@ public class Graph extends Fragment implements MyFragmentListener {
 
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
+    }
+
+
+    public void onPointClick(int position) {
+        //position is the item index in the list of cards
+        CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
+        cardDetailedFragment.fillDialogFragment(position);
+        cardDetailedFragment.setTargetFragment(Graph.this,200);
+        cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void updateView() {
+        readData();
+    }
+
+    private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            return true;
+        }
+    }
+
+    public void openEditTaskActivity(int i) {
+        System.out.println("zall");
+        Intent intent = new Intent(getActivity(), CreateActivity.class);
+        intent.putExtra("presetsPath", mPresetsFilePath);
+        intent.putExtra("categories", mCategories);
+        intent.putExtra("task", listener.getTask(i));
+        intent.putExtra("position", i);
+        intent.putExtra("tagList", listener.getTagList());
+        intent.putExtra("requestCode", 2);
+        startActivityForResult(intent, 2);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -338,9 +383,7 @@ public class Graph extends Fragment implements MyFragmentListener {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void updateView() {
-        readData();
-    }
+
+
+
 }
