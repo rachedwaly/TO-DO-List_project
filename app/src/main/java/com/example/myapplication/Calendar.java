@@ -44,6 +44,9 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     private List<Task> tasks;
     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
+    private int deletedTasks = 0;
+    private int currentTasks = 0;
+
     private static final String ARG_TASKS = "tasksPath";
     private static final String ARG_PRESETS = "presetsPath";
     private static final String ARG_CATEGORIES = "categories";
@@ -69,10 +72,10 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         mTasksFilePath = getArguments().getString(ARG_TASKS);
         mPresetsFilePath = getArguments().getString(ARG_PRESETS);
         mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
+
     }
 
     @Override
@@ -91,9 +94,13 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
                 cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
             }
         });
-
+        Schedule newTask = new Schedule();
+        newTask.setStartTime(new Time(0,0)); // sets the beginning of class time (hour,minute)
+        newTask.setEndTime(new Time(1,0)); // sets the end of class time (hour,minute)
+        newTask.setDay(0);
+        schedules.add(newTask);
+        for (int i=0; i<10;i++) timetable.add(schedules);
         readData();
-
         return calendarFragmentView;
     }
 
@@ -110,22 +117,21 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
 
     @Override
     public void updateView() {
-        timetable.removeAll();
         readData();
     }
 
     private void readData(){
+        deletedTasks += currentTasks;
+        currentTasks = 0;
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             createTask(tasks.get(i).getId(), tasks.get(i).getDueDate(), tasks.get(i).getDueTime(), tasks.get(i).getName(), tasks.get(i).getCategory());
         }
+        timetable.add(schedules);
     }
 
     private void createTask(int index, String date, String time, String name, String category) {
-
-        schedules.clear();
         Schedule newTask = new Schedule();
-
         String[] timeArray = time.split(":");
         int HH = Integer.parseInt(timeArray[0]);
         int mm = Integer.parseInt(timeArray[1]);
@@ -135,7 +141,10 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         newTask.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
         newTask.setDay(index);
         schedules.add(newTask);
-        timetable.add(schedules);
+        Log.d("","number of calendar tasks : " + String.valueOf(timetable.getAllSchedulesInStickers().size()));
+        timetable.edit(index, schedules);
+        currentTasks++;
+        schedules.clear();
     }
 
     public void openAddTaskActivity() {
@@ -176,7 +185,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -190,7 +198,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
             }
         }
     }
