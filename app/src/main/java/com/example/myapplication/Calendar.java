@@ -45,6 +45,7 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
     private int currentWeekFirstDay = 5;
+    private int currentMonth = 4;
 
     private static final String ARG_TASKS = "tasksPath";
     private static final String ARG_PRESETS = "presetsPath";
@@ -98,7 +99,7 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         newTask.setEndTime(new Time(1,0)); // sets the end of class time (hour,minute)
         newTask.setDay(0);
         schedules.add(newTask);
-        for (int i=0; i<10;i++) timetable.add(schedules);
+        for (int i=0; i<20;i++) timetable.add(schedules);
         readData();
         return calendarFragmentView;
     }
@@ -116,11 +117,21 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
 
     @Override
     public void updateView() {
+
         readData();
     }
 
     private void readData(){
         tasks = listener.getFilteredTaskList();
+        Schedule emptyTask = new Schedule();
+        emptyTask.setStartTime(new Time(0,0)); // sets the beginning of class time (hour,minute)
+        emptyTask.setEndTime(new Time(1,0)); // sets the end of class time (hour,minute)
+        emptyTask.setDay(0);
+        schedules.add(emptyTask);
+        for (int i = tasks.size()-1; i < 20; i++){
+            timetable.edit(i, schedules);
+        }
+        schedules.clear();
         for(int i = 0 ; i < tasks.size(); i++){
             createTask(tasks.get(i).getId(), tasks.get(i).getDueDate(), tasks.get(i).getDueTime(), tasks.get(i).getName(), tasks.get(i).getCategory());
         }
@@ -131,18 +142,22 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         Schedule newTask = new Schedule();
         String[] dateArray = date.split("-");
         String[] timeArray = time.split(":");
-        int jj = Integer.parseInt(dateArray[0]);
+        int dd = Integer.parseInt(dateArray[0]);
+        int MM = Integer.parseInt(dateArray[1]);
         int HH = Integer.parseInt(timeArray[0]);
         int mm = Integer.parseInt(timeArray[1]);
-        newTask.setClassTitle(name); // sets subject
-        newTask.setClassPlace(category); // sets place
-        newTask.setStartTime(new Time(HH,mm)); // sets the beginning of class time (hour,minute)
-        newTask.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
-        newTask.setDay(jj - currentWeekFirstDay);
-        schedules.add(newTask);
-        Log.d("","number of calendar tasks : " + String.valueOf(timetable.getAllSchedulesInStickers().size()));
-        timetable.edit(index, schedules);
-        schedules.clear();
+        if (MM == currentMonth && dd<currentWeekFirstDay+7) //very ugly and inaccurate way to filter displayable tasks
+        {
+            newTask.setClassTitle(name); // sets subject
+            newTask.setClassPlace(category); // sets place
+            newTask.setStartTime(new Time(HH, mm)); // sets the beginning of class time (hour,minute)
+            newTask.setEndTime(new Time(HH + 1, mm)); // sets the end of class time (hour,minute)
+            newTask.setDay(dd - currentWeekFirstDay);
+            schedules.add(newTask);
+            Log.d("", "number of calendar tasks : " + String.valueOf(timetable.getAllSchedulesInStickers().size()));
+            timetable.edit(index, schedules);
+            schedules.clear();
+        }
     }
 
     public void openAddTaskActivity() {
