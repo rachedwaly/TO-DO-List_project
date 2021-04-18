@@ -224,8 +224,8 @@ public class Graph extends Fragment implements MyFragmentListener {
 
 //                    taskname.setText(data_name.get(v.getId()));
 
-                    int dx1 = lastX - x;
-                    int dy1 = lastY - y;
+                    int dx1 =  lastX - x;
+                    int dy1 =  lastY - y;
 
 
                     //Log.d("x", String.valueOf(lastX));
@@ -234,19 +234,23 @@ public class Graph extends Fragment implements MyFragmentListener {
                     int scale = llTouchwidth / 6;
                     int effort = tasks.get(v.getId()).getEffort() + Math.round(dx1 / scale);
                     int urgent = tasks.get(v.getId()).getUrgency() - Math.round((dy1)/ scale);
+
+                    if (effort<1) { effort = 1; }
+                    if (urgent<1) { urgent = 1; }
+                    if (effort>5) { effort = 5; }
+                    if (urgent>5) { urgent = 5; }
+
+
+                    int position = v.getId();
+
+                    //Modify the current task with the new entries
+
+
                     taskeffort.setText("Effort: " + effort);
                     taskurgent.setText("Urgent: "  + urgent);
 
-                    int position = v.getId();
-                    Task currentTask = listener.getTask(position);
-
-                    //Modify the current task with the new entries
-                    currentTask.setEffort(effort);
-                    currentTask.setUrgency(urgent);
-
-                    listener.remove(position);
-                    listener.addTask(position,currentTask);
-                    listener.updateTagList(currentTask.getTags());
+                    listener.getTask(position).setEffort(effort);
+                    listener.getTask(position).setUrgency(urgent);
 
 //                    mAdapter.notifyDataSetChanged();
 
@@ -319,7 +323,6 @@ public class Graph extends Fragment implements MyFragmentListener {
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -333,7 +336,6 @@ public class Graph extends Fragment implements MyFragmentListener {
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
             }
         }
     }
