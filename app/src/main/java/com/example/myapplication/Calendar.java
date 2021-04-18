@@ -85,7 +85,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-                timetable.setHeaderHighlight(idx+1);
                 CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
                 cardDetailedFragment.fillDialogFragment(idx);
                 cardDetailedFragment.setTargetFragment(Calendar.this,300);
