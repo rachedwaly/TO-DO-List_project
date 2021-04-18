@@ -25,13 +25,15 @@ public class CardDetailedFragment extends DialogFragment {
     private TextView category;
     private TextView dueTime;
     private ChipGroup tags;
-    private Button button;
+    private Button editButton;
+    private Button deleteButton;
 
     private int position;
     private MyTaskListListener listener;
 
     public interface EditTaskListener{
         void openEditTaskActivity(int i);
+        void deleteTask(int i);
     }
 
     @Override
@@ -56,9 +58,17 @@ public class CardDetailedFragment extends DialogFragment {
         category=view.findViewById(R.id.category);
         dueTime=view.findViewById(R.id.DueTime);
         tags = view.findViewById(R.id.tags);
-        button=view.findViewById(R.id.editButton);
+        editButton=view.findViewById(R.id.editButton);
+        deleteButton=view.findViewById(R.id.deleteTask);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendDeleteRequest();
+            }
+        });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendBackResult();
@@ -105,4 +115,11 @@ public class CardDetailedFragment extends DialogFragment {
         listener.openEditTaskActivity(position);
         dismiss();
     }
+
+    public void sendDeleteRequest(){
+        EditTaskListener listener= (EditTaskListener) getTargetFragment();
+        listener.deleteTask(position);
+        dismiss();
+    }
+
 }

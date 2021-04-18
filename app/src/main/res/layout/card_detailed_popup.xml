@@ -117,6 +117,16 @@
                         android:scrollbars="vertical"></com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
+            <Button
+                android:id="@+id/deleteTask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="delete"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="50dp"
+                />
+
+
         </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
