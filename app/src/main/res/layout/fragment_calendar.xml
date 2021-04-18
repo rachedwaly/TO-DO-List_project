@@ -11,8 +11,8 @@
         android:id="@+id/timetable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:column_count="5"
-        app:row_count="12" />
-
+        app:column_count="8"
+        app:row_count="12"
+        app:header_title="@array/week_header_title"/>
 
 </FrameLayout>

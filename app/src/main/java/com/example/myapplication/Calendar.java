@@ -112,11 +112,11 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
 
     @Override
     public void updateView() {
+        timetable.removeAll();
         readData();
     }
 
     private void readData(){
-        timetable.removeAll();
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             createTask(tasks.get(i).getId(), tasks.get(i).getDueDate(), tasks.get(i).getDueTime(), tasks.get(i).getName(), tasks.get(i).getCategory());
@@ -152,8 +152,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         Task.ID_COUNT += 1;
 
         // TODO : move this to onActivity result
-
-
         intent.putExtra("task", newTask);
         startActivityForResult(intent, 1);
     }
