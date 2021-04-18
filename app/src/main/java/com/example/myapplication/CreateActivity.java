@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,9 +20,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -43,13 +47,14 @@ import java.util.HashSet;
 import java.util.List;
 
 public class CreateActivity extends AppCompatActivity implements TagsPickerFragment.onTagsEventListener {
-    private static final String FILE_NAME = "tasks.json";
+
     //UI References
     private Spinner preset;
     private String selectedPreset;
     private EditText name;
     private Spinner category;
     private String selectedCategory;
+    private EditText newCategoryName;
     private TextView dueDate;
     private TableRow repeaterRow;
     private Spinner repeater;
@@ -84,14 +89,17 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        tagsList = (HashSet<String>) (getIntent().getSerializableExtra("tagList"));
 
-        /*ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);*/
+
+        // Back button
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Load widgets
         findViewsById();
 
+        //Get variables
+        tagsList = (HashSet<String>) (getIntent().getSerializableExtra("tagList"));
 
         presetFilePath = getIntent().getStringExtra("presetsPath");
         Log.d("CreateActivity preset", presetFilePath);
@@ -126,16 +134,9 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
                     for (Preset p : presets) {
                         if (p.getName().equals(selectedPreset)) {
 
-                            currentTask.getTags().clear();
-                            for (int i=0; i < tags.getChildCount();i++){
-                                Chip chip = (Chip) tags.getChildAt(i);
-                                if (p.getTags().contains(chip.getText().toString())) {
-                                    chip.setVisibility(View.VISIBLE);
-                                    currentTask.getTags().add(chip.getText().toString());
-                                } else {
-                                    chip.setVisibility(View.GONE);
-                                }
-                            }
+                            currentTask.setTags(p.getTags());
+                            changeChipVisibility();
+
                             selectedCategory = p.getCategory();
                             effortSlider.setValue(p.getEffort());
                             urgencySlider.setValue(p.getUrgency());
@@ -144,8 +145,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
                     }
 
                     category.setSelection(((ArrayAdapter) category.getAdapter()).getPosition(selectedCategory));
-                    TableRow categoryRow = (TableRow) findViewById(R.id.newCategory);
-                    categoryRow.setVisibility(View.GONE);
                 }
 
             }
@@ -168,20 +167,62 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
+                currentTask.getTags().remove(selectedCategory.toLowerCase());
                 selectedCategory = parent.getItemAtPosition(pos).toString();
 
                 TableRow categoryRow = (TableRow) findViewById(R.id.newCategory);
+                String newTagName = newCategoryName.getText().toString().toLowerCase();
                 if (selectedCategory.equals("New category")) {
                     categoryRow.setVisibility(View.VISIBLE);
+                    createChip("");
+                    newCategoryName.setText("");
+                    currentTask.getTags().add("");
+                    tagsList.add("");
                 } else {
                     categoryRow.setVisibility(View.GONE);
+                    currentTask.getTags().add(selectedCategory.toLowerCase());
+                    tagsList.remove(newTagName);
+                    deleteChip(newTagName);
                 }
+
+                changeChipVisibility();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
                 // TODO Auto-generated method stub
 
+            }
+        });
+
+        // Add a listener on the new category name
+        newCategoryName.addTextChangedListener(new TextWatcher() {
+
+            Chip myChip;
+
+            public void afterTextChanged(Editable s) {
+                String oldTag = myChip.getText().toString();
+                currentTask.getTags().remove(oldTag);
+                tagsList.remove(oldTag);
+
+                String newTag = s.toString().toLowerCase();
+                myChip.setText(newTag);
+                currentTask.getTags().add(newTag);
+                tagsList.add(newTag);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+                for (int i=0; i < tags.getChildCount();i++){
+                    Chip chip = (Chip) tags.getChildAt(i);
+                    if (chip.getText().toString().equals(s.toString().toLowerCase())) {
+                        myChip = chip;
+                    }
+                }
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
             }
         });
 
@@ -218,7 +259,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         }
 
 
-        //Initialize display regarding the given task (new task or modifying a task?)
+        //Initialize display regarding the given task (new task or modifying a task)
         preset.setSelection(0);
         selectedPreset = currentTask.getPreset();
         name.setText(currentTask.getName());
@@ -235,24 +276,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
 
         //Initialize the tags chip group
         for (String tag : tagsList) {
-            Chip chip = new Chip(this);
-            chip.setText(tag);
-            chip.setCloseIconVisible(true);
-            chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chip.setVisibility(View.GONE);
-                    currentTask.getTags().remove(tag);
-                }
-            });
-
-            if (currentTask.getTags().contains(tag)) {
-                chip.setVisibility(View.VISIBLE);
-            } else {
-                chip.setVisibility(View.GONE);
-            }
-
-            tags.addView(chip);
+            createChip(tag);
         }
     }
 
@@ -264,6 +288,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         dueTime = (TextView) findViewById(R.id.due_time);
         name = (EditText) findViewById(R.id.name);
         category = (Spinner) findViewById(R.id.category);
+        newCategoryName = (EditText) findViewById(R.id.newCategoryName);
         description = (EditText) findViewById(R.id.description);
         effortSlider = (Slider) findViewById(R.id.effort);
         urgencySlider = (Slider) findViewById(R.id.urgency);
@@ -299,11 +324,13 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
     }
 
     public void showDatePickerDialog(View v) {
+        //Show the date picker
         DialogFragment newFragment = new DatePickerFragment(dueDate, repeaterRow);
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void showTimePickerDialog(View v) {
+        //Show the time picker
         DialogFragment newFragment = new TimePickerFragment(dueTime);
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
@@ -315,24 +342,8 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         newFragment.show(fm, "fragment_tags");
     }
 
-    @Override
-    public void addTags(String s) {
-        currentTask.getTags().add(s);
-
-        for (int i=0; i < tags.getChildCount();i++){
-            Chip chip = (Chip) tags.getChildAt(i);
-            if (chip.getText().toString().equals(s)) {
-                chip.setVisibility(View.VISIBLE);
-            }
-        }
-
-    }
-
-    @Override
-    public void addNewTags(String s) {
-        tagsList.add(s);
-        currentTask.getTags().add(s);
-
+    // Create a chip widget
+    private void createChip(String s) {
         Chip chip = new Chip(this);
         chip.setText(s);
         chip.setCloseIconVisible(true);
@@ -344,23 +355,61 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
             }
         });
 
-        tags.addView(chip);
+        if (currentTask.getTags().contains(s)) {
+            chip.setVisibility(View.VISIBLE);
+        } else {
+            chip.setVisibility(View.GONE);
+        }
 
+        tags.addView(chip);
+    }
+
+    private void deleteChip(String s) {
+        for (int i=0; i < tags.getChildCount();i++){
+            Chip chip = (Chip) tags.getChildAt(i);
+            if (chip.getText().toString().equals(s)) {
+                tags.removeView(chip);
+            }
+        }
+    }
+
+    //Change the visibility of the chip in the chip group
+    private void changeChipVisibility () {
+        for (int i=0; i < tags.getChildCount();i++){
+            Chip chip = (Chip) tags.getChildAt(i);
+            if (currentTask.getTags().contains(chip.getText().toString())) {
+                chip.setVisibility(View.VISIBLE);
+            } else {
+                chip.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    //Functions of the listener
+    //-----------------------------------------------------
+
+    @Override
+    public void addTags(String s) {
+        currentTask.getTags().add(s);
+        changeChipVisibility();
+    }
+
+    @Override
+    public void addNewTags(String s) {
+        tagsList.add(s);
+        currentTask.getTags().add(s);
+        createChip(s);
     }
 
     @Override
     public void removeTags(String s) {
         currentTask.getTags().remove(s);
-
-        for (int i=0; i < tags.getChildCount();i++){
-            Chip chip = (Chip) tags.getChildAt(i);
-            if (chip.getText().toString().equals(s)) {
-                chip.setVisibility(View.GONE);
-            }
-        }
-
+        changeChipVisibility();
     }
 
+    //-----------------------------------------------------
+
+    //onClick of the new preset checkbox
     public void onPresetCheckboxClicked(View view) {
         // Is the view now checked?
         boolean checked = newPreset.isChecked();
@@ -373,70 +422,80 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         }
     }
 
-
+    //onClick of the create button
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onCreateClicked(View view) {
 
-        Log.d("Begin", "try");
+        if(calendar.isChecked() && dueDate.getText().toString().equals("")) {
+            Context context = getApplicationContext();
+            CharSequence text = "A date is required to add to the calendar";
+            int duration = Toast.LENGTH_SHORT;
 
-        // Add the category if it's a new one
-        if (category.getSelectedItem().toString().equals("New category")) {
-            EditText newCategory = (EditText) findViewById(R.id.newCategoryName);
-            categories.add(1, newCategory.getText().toString());
-            selectedCategory = newCategory.getText().toString();
-        }
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
 
-        // Send back the category array
-        Intent data = new Intent();
-        data.putExtra("categories",categories);
+            Log.d("Begin", "try");
 
-        data.putExtra("position", getIntent().getIntExtra("position",-1));
-
-        //Modify the current task with the new entries (tags already updated)
-        currentTask.setPreset(selectedPreset);
-        currentTask.setName(name.getText().toString());
-        currentTask.setCategory(selectedCategory);
-        currentTask.setDueDate(dueDate.getText().toString());
-        currentTask.setRepeater(selectedRepeater);
-        currentTask.setDueTime(dueTime.getText().toString());
-        currentTask.setDescription(description.getText().toString());
-        currentTask.setEffort((int) effortSlider.getValue());
-        currentTask.setUrgency((int) urgencySlider.getValue());
-        currentTask.setCalendar(calendar.isChecked());
-
-        data.putExtra("task", currentTask);
-        // create Gson instance
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-
-        // Add the preset if needed
-        Writer writer = null;
-        if (newPreset.isChecked()) {
-            // Add in the spinner
-            ArrayAdapter presetAdapter = (ArrayAdapter) preset.getAdapter();
-            presetAdapter.add(newPresetName.getText().toString());
-
-            // Create the preset
-            Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
-                    (int) effortSlider.getValue(), (int) urgencySlider.getValue(), currentTask.getTags(), calendar.isChecked());
-
-            presets.add(p);
-
-            try {
-                Log.d("Write", "Add the new preset in the JSON file");
-                writer = Files.newBufferedWriter(Paths.get(presetFilePath));
-
-                // convert user object to JSON file
-                gson.toJson(presets, writer);
-
-                // close writer
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            // Add the category if it's a new one
+            if (category.getSelectedItem().toString().equals("New category")) {
+                categories.add(1, newCategoryName.getText().toString());
+                selectedCategory = newCategoryName.getText().toString();
             }
-        }
 
-        setResult(RESULT_OK, data);
-        finish();
+            // Send back the category array
+            Intent data = new Intent();
+            data.putExtra("categories", categories);
+
+            data.putExtra("position", getIntent().getIntExtra("position", -1));
+
+            //Modify the current task with the new entries (tags already updated)
+            currentTask.setPreset(selectedPreset);
+            currentTask.setName(name.getText().toString());
+            currentTask.setCategory(selectedCategory);
+            currentTask.setDueDate(dueDate.getText().toString());
+            currentTask.setRepeater(selectedRepeater);
+            currentTask.setDueTime(dueTime.getText().toString());
+            currentTask.setDescription(description.getText().toString());
+            currentTask.setEffort((int) effortSlider.getValue());
+            currentTask.setUrgency((int) urgencySlider.getValue());
+            currentTask.setCalendar(calendar.isChecked());
+
+            // Send back the task
+            data.putExtra("task", currentTask);
+
+            // create Gson instance
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+            // Add the preset if needed
+            Writer writer = null;
+            if (newPreset.isChecked()) {
+                // Add in the spinner
+                /*ArrayAdapter presetAdapter = (ArrayAdapter) preset.getAdapter();
+                presetAdapter.add(newPresetName.getText().toString());*/
+
+                // Create the preset
+                Preset p = new Preset(newPresetName.getText().toString(), selectedCategory,
+                        (int) effortSlider.getValue(), (int) urgencySlider.getValue(), currentTask.getTags(), calendar.isChecked());
+
+                presets.add(p);
+
+                try {
+                    Log.d("Write", "Add the new preset in the JSON file");
+                    writer = Files.newBufferedWriter(Paths.get(presetFilePath));
+
+                    // convert user object to JSON file
+                    gson.toJson(presets, writer);
+
+                    // close writer
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            setResult(RESULT_OK, data);
+            finish();
+        }
     }
 }

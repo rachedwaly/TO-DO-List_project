@@ -97,6 +97,29 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
                 }).attach();
     }
 
+    // To go back to the previous page but I don't know how to do it
+    /*@Override
+    public void onBackPressed() {
+        // There is no id
+        Log.d("id", String.valueOf(R.id.pager));
+        Fragment  f = getSupportFragmentManager().findFragmentById(R.id.pager);
+        if (f instanceof Calendar) {
+            // do operations
+
+        } else if (f instanceof Main) {
+            // do operations
+
+        }  else if (f instanceof Graph) {
+            // do operations
+
+        }else {
+            super.onBackPressed();
+        }
+
+        getSupportFragmentManager().popBackStack();
+
+    }*/
+
     @Override
     public ArrayList<Task> getFilteredTaskList(){
         return filteredTaskList;
