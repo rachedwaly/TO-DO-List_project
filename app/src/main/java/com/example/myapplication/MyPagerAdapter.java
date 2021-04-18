@@ -31,7 +31,7 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return new Calendar();
+            case 0: return Calendar.newInstance(mTasksFilePath, mPresetsFilePath, mCategories);
             case 1: return Main.newInstance(mTasksFilePath, mPresetsFilePath, mCategories);
             case 2: return Graph.newInstance(mTasksFilePath, mPresetsFilePath, mCategories);
         }

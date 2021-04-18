@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Calendar">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <com.github.tlaabs.timetableview.TimetableView
+        android:id="@+id/timetable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Calendar"
-        android:textSize="30sp" />
+        android:layout_height="wrap_content"
+        app:column_count="8"
+        app:row_count="12"
+        app:header_title="@array/week_header_title"/>
 
 </FrameLayout>
