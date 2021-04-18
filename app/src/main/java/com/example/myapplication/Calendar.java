@@ -117,7 +117,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
 
     @Override
     public void updateView() {
-
         readData();
     }
 
@@ -128,7 +127,7 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         emptyTask.setEndTime(new Time(1,0)); // sets the end of class time (hour,minute)
         emptyTask.setDay(0);
         schedules.add(emptyTask);
-        for (int i = tasks.size()-1; i < 20; i++){
+        for (int i = 0; i < 19; i++){
             timetable.edit(i, schedules);
         }
         schedules.clear();
