@@ -44,8 +44,7 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     private List<Task> tasks;
     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
-    private int deletedTasks = 0;
-    private int currentTasks = 0;
+    private int currentWeekFirstDay = 5;
 
     private static final String ARG_TASKS = "tasksPath";
     private static final String ARG_PRESETS = "presetsPath";
@@ -121,8 +120,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     }
 
     private void readData(){
-        deletedTasks += currentTasks;
-        currentTasks = 0;
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             createTask(tasks.get(i).getId(), tasks.get(i).getDueDate(), tasks.get(i).getDueTime(), tasks.get(i).getName(), tasks.get(i).getCategory());
@@ -132,18 +129,19 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
 
     private void createTask(int index, String date, String time, String name, String category) {
         Schedule newTask = new Schedule();
+        String[] dateArray = date.split("-");
         String[] timeArray = time.split(":");
+        int jj = Integer.parseInt(dateArray[0]);
         int HH = Integer.parseInt(timeArray[0]);
         int mm = Integer.parseInt(timeArray[1]);
         newTask.setClassTitle(name); // sets subject
         newTask.setClassPlace(category); // sets place
         newTask.setStartTime(new Time(HH,mm)); // sets the beginning of class time (hour,minute)
         newTask.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
-        newTask.setDay(index);
+        newTask.setDay(jj - currentWeekFirstDay);
         schedules.add(newTask);
         Log.d("","number of calendar tasks : " + String.valueOf(timetable.getAllSchedulesInStickers().size()));
         timetable.edit(index, schedules);
-        currentTasks++;
         schedules.clear();
     }
 
