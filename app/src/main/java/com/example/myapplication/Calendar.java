@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,9 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.github.tlaabs.timetableview.Schedule;
 import com.github.tlaabs.timetableview.Time;
@@ -25,23 +23,26 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Calendar#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Calendar extends Fragment implements MyFragmentListener  {
+public class Calendar extends Fragment implements MyFragmentListener , CardDetailedFragment.EditTaskListener{
 
 
     private View calendarFragmentView;
     private TimetableView timetable;
     private MyTaskListListener listener;
     private List<Task> tasks;
-    ArrayList<Schedule> shedules = new ArrayList<Schedule>();
+    ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
     private static final String ARG_TASKS = "tasksPath";
     private static final String ARG_PRESETS = "presetsPath";
@@ -81,16 +82,18 @@ public class Calendar extends Fragment implements MyFragmentListener  {
         // Inflate the layout for this fragment
         calendarFragmentView = inflater.inflate(R.layout.fragment_calendar, container, false);
         timetable = (TimetableView) calendarFragmentView.findViewById(R.id.timetable);
-        Schedule task = new Schedule();
-        task.setClassTitle("Test"); // sets subject
-        task.setClassPlace("IGR"); // sets place
-        task.setStartTime(new Time(10,0)); // sets the beginning of class time (hour,minute)
-        task.setEndTime(new Time(13,30)); // sets the end of class time (hour,minute)
-        shedules.add(task);
-//.. add one or more schedule
-        timetable.add(shedules);
 
-        readTasks();
+        timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
+            @Override
+            public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
+                timetable.setHeaderHighlight(idx);
+                CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
+                cardDetailedFragment.fillDialogFragment(idx);
+                cardDetailedFragment.setTargetFragment(Calendar.this,300);
+                cardDetailedFragment.show(getFragmentManager(),"TaskDetailed");
+            }
+        });
+
         readData();
 
         return calendarFragmentView;
@@ -101,7 +104,7 @@ public class Calendar extends Fragment implements MyFragmentListener  {
         super.onAttach(context);
         try {
             listener = (MyTaskListListener) context;
-            listener.registerFragmentListener(((MyFragmentListener)this));
+            listener.registerFragmentListener(((MyFragmentListener)this), 0);
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
         }
@@ -109,11 +112,12 @@ public class Calendar extends Fragment implements MyFragmentListener  {
 
     @Override
     public void updateView() {
-        readTasks();
         readData();
     }
 
     private void readData(){
+        timetable.removeAll();
+        tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             createTask(tasks.get(i).getId(), tasks.get(i).getDueDate(), tasks.get(i).getDueTime(), tasks.get(i).getName(), tasks.get(i).getCategory());
         }
@@ -121,36 +125,76 @@ public class Calendar extends Fragment implements MyFragmentListener  {
 
     private void createTask(int index, String date, String time, String name, String category) {
         Schedule task = new Schedule();
+
+
+        String[] timeArray = time.split(":");
+        int HH = Integer.parseInt(timeArray[0]);
+        int mm = Integer.parseInt(timeArray[1]);
         task.setClassTitle(name); // sets subject
         task.setClassPlace(category); // sets place
-        task.setStartTime(new Time(10,0)); // sets the beginning of class time (hour,minute)
-        task.setEndTime(new Time(13,30)); // sets the end of class time (hour,minute)
+        task.setStartTime(new Time(HH,mm)); // sets the beginning of class time (hour,minute)
+        task.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
         task.setDay(index);
-        shedules.add(task);
-        timetable.add(shedules);
+        schedules.add(task);
+        timetable.add(schedules);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void readTasks() {
-        // create a reader
-        Reader reader = null;
-        try {
-            Log.d("Read", "try");
-            reader = Files.newBufferedReader(Paths.get(mTasksFilePath));
+    public void openAddTaskActivity() {
+        Intent intent = new Intent(getActivity(), CreateActivity.class);
+        intent.putExtra("tasksPath", mTasksFilePath);
+        intent.putExtra("presetsPath", mPresetsFilePath);
+        intent.putExtra("categories", mCategories);
+        intent.putExtra("tagList", listener.getTagList());
+        intent.putExtra("requestCode", 1);
+        Task newTask = new Task();
+        /*Task newTask = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
+                "12:13", "My description", 3, 4, new String[]{"exam", "urgent"}, true);*/
+        Task.ID_COUNT += 1;
 
-            // create Gson instance
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // TODO : move this to onActivity result
 
-            // convert JSON string to Book object
-            tasks = new ArrayList<Task>(Arrays.asList(gson.fromJson(reader, Task[].class)));
 
-            // print book
-            tasks.forEach(System.out::println);
+        intent.putExtra("task", newTask);
+        startActivityForResult(intent, 1);
+    }
 
-            // close reader
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Override
+    public void openEditTaskActivity(int i) {
+        Intent intent = new Intent(getActivity(), CreateActivity.class);
+        intent.putExtra("tasksPath", mTasksFilePath);
+        intent.putExtra("presetsPath", mPresetsFilePath);
+        intent.putExtra("categories", mCategories);
+        intent.putExtra("task", listener.getTask(i));
+        intent.putExtra("position", i);
+        intent.putExtra("tagList", listener.getTagList());
+        intent.putExtra("requestCode", 2);
+        startActivityForResult(intent, 2);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(newTask);
+                listener.updateTagList(newTask.getTags());
+                listener.updateFragments();
+                //mCategories.forEach(System.out::println);
+            }
+        }
+        if (requestCode == 2) {
+
+            if (resultCode == RESULT_OK) {
+                mCategories = data.getStringArrayListExtra("categories");
+                int position=data.getIntExtra("position",-1);
+
+                listener.remove(position);
+                Task newTask=(Task) data.getSerializableExtra("task");
+                listener.addTask(position,newTask);
+                listener.updateTagList(newTask.getTags());
+                listener.updateFragments();
+            }
         }
     }
 }
