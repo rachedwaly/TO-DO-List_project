@@ -255,11 +255,24 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
                     "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
             Task.ID_COUNT += 1;
 
+            //Category tags
             tagList.add("exam");
-            tagList.add("c++");
             tagList.add("meeting");
             tagList.add("project");
+
+            //Effort tags
+            tagList.add("easy");
+            tagList.add("medium effort");
             tagList.add("hard");
+
+            //Urgency tags
+            tagList.add("not urgent");
+            tagList.add("low urgency");
+            tagList.add("medium urgency");
+            tagList.add("urgent");
+
+            //Other tags
+            tagList.add("c++");
 
             addTask(newTask1);
             addTask(newTask2);
