@@ -331,6 +331,11 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
     }
 
+    @Override
+    public void deleteTask(int i) {
+        listener.remove(i);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {

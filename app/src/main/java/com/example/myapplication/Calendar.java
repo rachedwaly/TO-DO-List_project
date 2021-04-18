@@ -175,6 +175,11 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         startActivityForResult(intent, 2);
     }
 
+    @Override
+    public void deleteTask(int i) {
+        listener.remove(i);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
