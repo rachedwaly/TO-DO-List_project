@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
     private HashSet<String> tagList;
     private HashSet<String> activeTagList;
     MyPagerAdapter myPagerAdapter;
-    MyFragmentListener fragmentListener;
+    MyFragmentListener [] fragmentListeners = new MyFragmentListener[3];
 
     private Button filterButton;
 
@@ -97,6 +97,29 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
                 }).attach();
     }
 
+    // To go back to the previous page but I don't know how to do it
+    /*@Override
+    public void onBackPressed() {
+        // There is no id
+        Log.d("id", String.valueOf(R.id.pager));
+        Fragment  f = getSupportFragmentManager().findFragmentById(R.id.pager);
+        if (f instanceof Calendar) {
+            // do operations
+
+        } else if (f instanceof Main) {
+            // do operations
+
+        }  else if (f instanceof Graph) {
+            // do operations
+
+        }else {
+            super.onBackPressed();
+        }
+
+        getSupportFragmentManager().popBackStack();
+
+    }*/
+
     @Override
     public ArrayList<Task> getFilteredTaskList(){
         return filteredTaskList;
@@ -109,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         if (isFiltered(t)){
             filteredTaskList.add(t);
         }
+        updateFragments();
     }
 
     @Override
@@ -116,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         completeTaskList.add(t);
         t.setPosCompleteTaskList(completeTaskList.size()-1);
         filteredTaskList.add(posInFiltered, t);
+        updateFragments();
     }
 
     @Override
@@ -129,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         completeTaskList.remove(completeTaskList.size()-1);
 
         filteredTaskList.remove(posInFiltered);
+        updateFragments();
     }
 
     @Override
@@ -172,23 +198,28 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
                 filteredTaskList.add(task);
             }
         }
-        if (fragmentListener!=null) { fragmentListener.updateView(); }
+        updateFragments();
     }
 
     @Override
     public void updateTagList(HashSet<String> taskTagList) { tagList.addAll(taskTagList); }
 
     @Override
-    public void registerFragmentListener(MyFragmentListener fragmentListener) {
-        this.fragmentListener = fragmentListener;
+    public void registerFragmentListener(MyFragmentListener fragmentListener, int position) {
+        this.fragmentListeners[position] = fragmentListener;
+    }
+
+    @Override
+    public void updateFragments() {
+        for (int i=0; i<3; i++){
+            if (fragmentListeners[i]!=null) { fragmentListeners[i].updateView(); }
+        }
     }
 
     public Boolean isFiltered(Task t){  // true if element should be displayed
         if (activeTagList.isEmpty()) { return true; }
         else {
-            Set<String> intersectSet = new HashSet<>(t.getTags());
-            intersectSet.retainAll(activeTagList);
-            return !(intersectSet.isEmpty());
+            return (t.getTags()).containsAll(activeTagList);
         }
     }
 
@@ -215,20 +246,33 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
 
             // add premade tasks
             Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
-                    "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++")), true);
+                    "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++", "medium effort", "urgent")), true);
             Task.ID_COUNT += 1;
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting")), false);
+                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting", "easy", "not urgent")), false);
             Task.ID_COUNT += 1;
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
-                    "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
+                    "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
             Task.ID_COUNT += 1;
 
+            //Category tags
             tagList.add("exam");
-            tagList.add("c++");
             tagList.add("meeting");
             tagList.add("project");
+
+            //Effort tags
+            tagList.add("easy");
+            tagList.add("medium effort");
             tagList.add("hard");
+
+            //Urgency tags
+            tagList.add("not urgent");
+            tagList.add("low urgency");
+            tagList.add("medium urgency");
+            tagList.add("urgent");
+
+            //Other tags
+            tagList.add("c++");
 
             addTask(newTask1);
             addTask(newTask2);
@@ -271,9 +315,9 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
             fileWriter = new FileWriter(presetFile.getAbsoluteFile());
 
             // add premade presets
-            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new String[]{"exam", "urgent"}, true);
-            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new String[]{"project", "hard"}, true);
-            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new String[]{"meeting"}, false);
+            Preset newPreset1 = new Preset("Exam", "Exam", 3, 4, new HashSet<>(Arrays.asList("exam", "urgent")), true);
+            Preset newPreset2 = new Preset("Project", "Project", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
+            Preset newPreset3 = new Preset("Meeting", "Meeting", 1, 1, new HashSet<>(Arrays.asList("meeting")), false);
 
             List<Preset> presets = Arrays.asList(newPreset1, newPreset2, newPreset3);
 

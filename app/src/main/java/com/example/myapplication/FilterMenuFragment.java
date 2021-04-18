@@ -75,6 +75,7 @@ public class FilterMenuFragment extends DialogFragment {
         Chip chip=new Chip(getContext());
         chip.setText(nameOfTag);
         chip.setCheckable(true);
+        if (taskListListener.getActiveTagList().contains(nameOfTag)) { chip.setChecked(true); }
         chip.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {

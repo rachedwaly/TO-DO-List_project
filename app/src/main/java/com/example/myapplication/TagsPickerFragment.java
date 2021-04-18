@@ -84,7 +84,7 @@ public class TagsPickerFragment extends DialogFragment {
             @Override
             public void onClick(View v)
             {
-                String newTag = newTagName.getText().toString();
+                String newTag = newTagName.getText().toString().toLowerCase();
                 if (!newTag.equals("")) {
                     tagsEventListener.addNewTags(newTag);
 

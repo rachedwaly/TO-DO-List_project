@@ -123,7 +123,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         super.onAttach(context);
         try {
             listener = (MyTaskListListener) context;
-            listener.registerFragmentListener(((MyFragmentListener)this));
+            listener.registerFragmentListener(((MyFragmentListener)this), 1);
         } catch (ClassCastException castException) {
             /** The activity does not implement the listener. */
         }
@@ -302,7 +302,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
     public void openAddTaskActivity() {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
-        intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         intent.putExtra("tagList", listener.getTagList());
@@ -322,13 +321,8 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
 
 
-
-
-
-    @Override
     public void openEditTaskActivity(int i) {
         Intent intent = new Intent(getActivity(), CreateActivity.class);
-        intent.putExtra("tasksPath", mTasksFilePath);
         intent.putExtra("presetsPath", mPresetsFilePath);
         intent.putExtra("categories", mCategories);
         intent.putExtra("task", listener.getTask(i));
@@ -347,7 +341,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
-                mAdapter.notifyDataSetChanged();
+                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -361,7 +355,7 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
-                mAdapter.notifyDataSetChanged();
+                listener.updateFragments();
             }
         }
     }
