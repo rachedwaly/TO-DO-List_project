@@ -73,7 +73,6 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         mTasksFilePath = getArguments().getString(ARG_TASKS);
         mPresetsFilePath = getArguments().getString(ARG_PRESETS);
         mCategories = getArguments().getStringArrayList(ARG_CATEGORIES);
-
     }
 
     @Override
@@ -86,7 +85,7 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
         timetable.setOnStickerSelectEventListener(new TimetableView.OnStickerSelectedListener() {
             @Override
             public void OnStickerSelected(int idx, ArrayList<Schedule> schedules) {
-                timetable.setHeaderHighlight(idx);
+                timetable.setHeaderHighlight(idx+1);
                 CardDetailedFragment cardDetailedFragment=new CardDetailedFragment();
                 cardDetailedFragment.fillDialogFragment(idx);
                 cardDetailedFragment.setTargetFragment(Calendar.this,300);
@@ -124,18 +123,19 @@ public class Calendar extends Fragment implements MyFragmentListener , CardDetai
     }
 
     private void createTask(int index, String date, String time, String name, String category) {
-        Schedule task = new Schedule();
 
+        schedules.clear();
+        Schedule newTask = new Schedule();
 
         String[] timeArray = time.split(":");
         int HH = Integer.parseInt(timeArray[0]);
         int mm = Integer.parseInt(timeArray[1]);
-        task.setClassTitle(name); // sets subject
-        task.setClassPlace(category); // sets place
-        task.setStartTime(new Time(HH,mm)); // sets the beginning of class time (hour,minute)
-        task.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
-        task.setDay(index);
-        schedules.add(task);
+        newTask.setClassTitle(name); // sets subject
+        newTask.setClassPlace(category); // sets place
+        newTask.setStartTime(new Time(HH,mm)); // sets the beginning of class time (hour,minute)
+        newTask.setEndTime(new Time(HH+1,mm)); // sets the end of class time (hour,minute)
+        newTask.setDay(index);
+        schedules.add(newTask);
         timetable.add(schedules);
     }
 
