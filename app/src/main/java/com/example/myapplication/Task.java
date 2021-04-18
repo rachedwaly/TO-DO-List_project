@@ -35,7 +35,7 @@ public class Task implements Serializable {
         this.description = "";
         this.effort = 1;
         this.urgency = 1;
-        this.tags = new HashSet<String>();
+        this.tags = new HashSet<String>(Arrays.asList("easy", "not urgent"));
         this.calendar = false;
     }
 
