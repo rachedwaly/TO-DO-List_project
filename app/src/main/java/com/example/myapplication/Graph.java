@@ -246,11 +246,11 @@ public class Graph extends Fragment implements MyFragmentListener {
                     //Modify the current task with the new entries
 
 
-                    taskeffort.setText("Effort: " + effort);
-                    taskurgent.setText("Urgent: "  + urgent);
-
                     listener.getTask(position).setEffort(effort);
                     listener.getTask(position).setUrgency(urgent);
+
+                    taskeffort.setText("Effort: " + listener.getTask(position).getEffort());
+                    taskurgent.setText("Urgent: "  + listener.getTask(position).getUrgency());
 
 //                    mAdapter.notifyDataSetChanged();
 

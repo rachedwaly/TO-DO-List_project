@@ -214,6 +214,11 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         for (int i=0; i<3; i++){
             if (fragmentListeners[i]!=null) { fragmentListeners[i].updateView(); }
         }
+
+        for (Task t : filteredTaskList){
+            Log.d("tes1 effort", String.valueOf(t.getEffort()));
+            Log.d("tes1 urgent", String.valueOf(t.getUrgency()));
+        }
     }
 
     public Boolean isFiltered(Task t){  // true if element should be displayed
