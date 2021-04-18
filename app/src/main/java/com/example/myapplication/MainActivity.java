@@ -246,13 +246,13 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
 
             // add premade tasks
             Task newTask1 = new Task("Exam", "My exam", "Exam", "06-07-2021", "Don't repeat",
-                    "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++")), true);
+                    "12:13", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++", "medium effort", "urgent")), true);
             Task.ID_COUNT += 1;
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "20-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting")), false);
+                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting", "easy", "not urgent")), false);
             Task.ID_COUNT += 1;
             Task newTask3 = new Task("Project", "My project", "Project", "03-05-2021", "Don't repeat",
-                    "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard")), true);
+                    "23:59", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
             Task.ID_COUNT += 1;
 
             //Category tags
