@@ -246,7 +246,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Toast.makeText(getActivity(),"card deleted",Toast.LENGTH_SHORT).show();
                 listener.remove(viewHolder.getAdapterPosition());
 
-                mAdapter.notifyDataSetChanged();
             }
             return false;
         }
@@ -271,7 +270,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         Task item=(Task) listener.getTask(oldPos);
         listener.remove(oldPos);
         listener.addTask(newPos,item);
-        mAdapter.notifyItemMoved(oldPos,newPos);
     }
 
     //check if the card is on the bin icon
@@ -341,7 +339,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
                 //mCategories.forEach(System.out::println);
             }
         }
@@ -355,7 +352,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
                 Task newTask=(Task) data.getSerializableExtra("task");
                 listener.addTask(position,newTask);
                 listener.updateTagList(newTask.getTags());
-                listener.updateFragments();
             }
         }
     }

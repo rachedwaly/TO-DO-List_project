@@ -11,8 +11,9 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:clickable="false"
+
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:src="@drawable/delete"/>
@@ -29,17 +30,20 @@
         android:layout_marginBottom="4dp"
         android:clickable="false"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        android:src="@drawable/ic_plus"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="-1dp"
         android:background="@android:color/darker_gray"
+        android:clipToPadding="false"
         android:paddingBottom="0dp"
-        android:scrollbars="vertical"
-        android:clipToPadding="false"/>
+        android:scrollbars="vertical" />
 
 
 </RelativeLayout>
