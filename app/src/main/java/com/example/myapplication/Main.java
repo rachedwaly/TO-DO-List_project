@@ -241,10 +241,12 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
 
-            moveItem(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+
             if (isViewOverlapping(viewHolder.itemView, mRecycleBinButton)) {
-                Toast.makeText(getActivity(),"card deleted",Toast.LENGTH_SHORT).show();
-                listener.remove(viewHolder.getAdapterPosition());
+                Toast.makeText(getActivity(),"task deleted",Toast.LENGTH_SHORT).show();
+                System.out.println(viewHolder.getBindingAdapterPosition());
+                listener.remove(viewHolder.getBindingAdapterPosition());
+
 
             }
             return false;
@@ -265,14 +267,6 @@ public class Main extends Fragment implements AdapterForCards.OnCardListener, Ca
 
     };
 
-    //rearrange cards when dragging cards
-    private void moveItem(int oldPos, int newPos){
-        Task item=(Task) listener.getTask(oldPos);
-        listener.remove(oldPos);
-        listener.addTask(newPos,item);
-    }
-
-    //check if the card is on the bin icon
     private boolean isViewOverlapping(View firstView, View secondView) {
 
         int[] secondPosition = new int[2];
