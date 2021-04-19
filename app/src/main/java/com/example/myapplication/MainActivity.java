@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         updateFilteredList();
     }
 
+    @Override
     public void updateFilteredList(){
         filteredTaskList.clear();
         for (Task task : completeTaskList){
