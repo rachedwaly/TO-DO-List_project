@@ -88,10 +88,46 @@ public class Task implements Serializable {
     }
 
     public void setEffort(int effort) {
+        tags.remove("easy");
+        tags.remove("medium effort");
+        tags.remove("hard");
+
+        if (effort == 1 || effort == 2) {
+            tags.add("easy");
+        }
+
+        if (effort == 3) {
+            tags.add("medium effort");
+        }
+
+        if (effort == 4 || effort == 5) {
+            tags.add("hard");
+        }
+
         this.effort = effort;
     }
 
     public void setUrgency(int urgency) {
+        tags.remove("not urgent");
+        tags.remove("low urgency");
+        tags.remove("medium urgency");
+        tags.remove("urgent");
+
+        if (urgency == 1) {
+            tags.add("not urgent");
+        }
+
+        if (urgency == 2) {
+            tags.add("low urgency");
+        }
+
+        if (urgency == 3) {
+            tags.add("medium urgency");
+        }
+
+        if (urgency == 4 || urgency == 5) {
+            tags.add("urgent");
+        }
         this.urgency = urgency;
     }
 

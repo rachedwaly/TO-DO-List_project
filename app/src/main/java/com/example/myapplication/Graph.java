@@ -134,7 +134,7 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
-            createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
+            createTask(i, tasks.get(i).getEffort(), tasks.get(i).getUrgency(),  tasks.get(i).getId());
         }
 
     }
@@ -252,22 +252,20 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
                     int position = v.getId();
 
                     //Modify the current task with the new entries
+                    Log.d("last_bug", String.valueOf(position));
+                    Log.d("last_bug", String.valueOf(listener.getFilteredTaskList().size()));
+
+                    Task t = listener.getTask(position);
+                    t.setEffort(effort);
+                    t.setUrgency(urgent);
 
 
-                    listener.getTask(position).setEffort(effort);
-                    listener.getTask(position).setUrgency(urgent);
 
-                    taskeffort.setText("Effort: " + listener.getTask(position).getEffort());
-                    taskurgent.setText("Urgent: "  + listener.getTask(position).getUrgency());
+                    listener.remove(position);
+                    listener.addTask(position,t);
 
-//                    mAdapter.notifyDataSetChanged();
+                    listener.updateFilteredList();
 
-                    for(int i = 0 ; i < tasks.size(); i++){
-                        //Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
-                        Log.d("x,y:", String.valueOf(effort)+" "+String.valueOf(urgent));
-                    }
-
-                    v = null;
                     break;
             }
             }
@@ -275,9 +273,9 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
         }
     };
 
-    private void createTask(int index, float x, float y) {
+    private void createTask(int index, float x, float y, int id) {
         ImageView iv = new ImageView(getActivity());
-        switch (index % 3){
+        switch (id % 3){
             case 0 : iv.setImageResource(R.drawable.task1); break;
             case 1 : iv.setImageResource(R.drawable.task2); break;
             case 2 : iv.setImageResource(R.drawable.task3); break;
@@ -285,8 +283,8 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
 //        iv.setId(index++);
         iv.setId(index);
         int param = llTouchheight / 6;
-        int left = Math.round(x * param);
-        int bottom = Math.round(y * param);
+        int left = Math.round(x * param) -60;
+        int bottom = Math.round(y * param) + 30;
         int top = llTouchheight - bottom;
         int right = llTouchwidth - left;
         Log.d("tst2","left:"  + left + "top:" + top);

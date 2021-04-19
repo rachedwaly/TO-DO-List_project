@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
         updateFilteredList();
     }
 
+    @Override
     public void updateFilteredList(){
         filteredTaskList.clear();
         for (Task task : completeTaskList){
@@ -251,46 +252,68 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
 
             // add premade tasks
             Task newTask1 = new Task("Exam", "My exam", "Exam", "05-04-2021", "Don't repeat",
-                    "10:30", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++", "medium effort", "urgent")), true);
+                    "10:30", "My description", 3, 4, new HashSet<>(Arrays.asList("exam", "c++")), true);
             Task.ID_COUNT += 1;
+            newTask1.setEffort(3);
+            newTask1.setUrgency(4);
             Task newTask2 = new Task("Meeting", "My meeting", "Meeting", "06-04-2021", "Repeat every week",
-                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting", "easy", "not urgent")), false);
+                    "16:00", "My description", 1, 1, new HashSet<>(Arrays.asList("exam", "meeting")), false);
             Task.ID_COUNT += 1;
+            newTask2.setEffort(1);
+            newTask2.setUrgency(1);
             Task newTask3 = new Task("Project", "My project", "Project", "11-04-2021", "Don't repeat",
-                    "09:00", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+                    "09:00", "My description", 4, 2, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask3.setEffort(4);
+            newTask3.setUrgency(2);
 
-            Task newTask4 = new Task("Project", "Project IGR203", "Project", "11-05-2021", "Don't repeat",
-                    "09:00", "My description", 3, 1, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask4 = new Task("Project", "Project IGR203", "IGR", "11-05-2021", "Don't repeat",
+                    "09:00", "My description", 3, 1, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask4.setEffort(2);
+            newTask4.setUrgency(2);
 
-            Task newTask5 = new Task("Project", "LAB IMA", "Project", "11-06-2021", "Don't repeat",
-                    "09:00", "My description", 5, 3, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask5 = new Task("Project", "LAB IMA", "IMA", "11-06-2021", "Don't repeat",
+                    "09:00", "My description", 5, 3, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask5.setEffort(5);
+            newTask5.setUrgency(5);
 
-            Task newTask6 = new Task("Project", "LAB INF224", "Project", "11-07-2021", "Don't repeat",
-                    "09:00", "My description", 5, 2, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask6 = new Task("Project", "LAB INF224", "INF224", "11-07-2021", "Don't repeat",
+                    "09:00", "My description", 5, 2, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask6.setEffort(5);
+            newTask6.setUrgency(3);
 
-            Task newTask7 = new Task("Project", "EXAM IGR201", "Project", "11-08-2021", "Don't repeat",
-                    "09:00", "My description", 5, 1, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask7 = new Task("Project", "EXAM IGR201", "IGR", "11-08-2021", "Don't repeat",
+                    "09:00", "My description", 5, 1, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask7.setEffort(3);
+            newTask7.setUrgency(4);
 
-            Task newTask8 = new Task("Project", "LAB Arduino", "Project", "11-09-2021", "Don't repeat",
-                    "09:00", "My description", 4, 2, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask8 = new Task("Project", "LAB Arduino", "IGR", "11-09-2021", "Don't repeat",
+                    "09:00", "My description", 4, 2, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask8.setEffort(4);
+            newTask8.setUrgency(4);
 
-            Task newTask9 = new Task("Project", "LAB gestural interface", "Project", "11-10-2021", "Don't repeat",
-                    "09:00", "My description", 4, 4, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask9 = new Task("Project", "LAB gestural interface", "IGR", "11-10-2021", "Don't repeat",
+                    "09:00", "My description", 4, 4, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask8.setEffort(1);
+            newTask8.setUrgency(5);
 
-            Task newTask10 = new Task("Project", "LAB IGR205", "Project", "11-11-2021", "Don't repeat",
-                    "09:00", "My description", 4, 5, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask10 = new Task("Project", "LAB IMA205", "IMA", "11-11-2021", "Don't repeat",
+                    "09:00", "My description", 4, 5, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask10.setEffort(4);
+            newTask10.setUrgency(3);
 
-            Task newTask11 = new Task("Project", "Meeting with teacher", "Project", "20-11-2021", "Don't repeat",
-                    "09:00", "My description", 5, 5, new HashSet<>(Arrays.asList("project", "hard", "low urgency")), true);
+            Task newTask11 = new Task("Meeting", "Meeting with teacher", "School", "20-11-2021", "Don't repeat",
+                    "09:00", "My description", 5, 5, new HashSet<>(Arrays.asList("project")), true);
             Task.ID_COUNT += 1;
+            newTask11.setEffort(5);
+            newTask11.setUrgency(1);
 
 
             //Category tags
@@ -321,8 +344,8 @@ public class MainActivity extends AppCompatActivity implements MyTaskListListene
             addTask(newTask7);
             addTask(newTask8);
             addTask(newTask9);
-            //addTask(newTask10);
-            //addTask(newTask11);
+            addTask(newTask10);
+            addTask(newTask11);
 
 
             Writer writer = Files.newBufferedWriter(Paths.get(taskFile.getPath()));
