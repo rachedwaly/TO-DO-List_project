@@ -134,7 +134,7 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
         tasks = listener.getFilteredTaskList();
         for(int i = 0 ; i < tasks.size(); i++){
             Log.d("create task: ", String.valueOf(tasks.get(i).getId()) + String.valueOf(tasks.get(i).getEffort()) + String.valueOf(tasks.get(i).getUrgency()));
-            createTask(tasks.get(i).getId(), tasks.get(i).getEffort(), tasks.get(i).getUrgency());
+            createTask(i, tasks.get(i).getEffort(), tasks.get(i).getUrgency());
         }
 
     }
@@ -254,8 +254,12 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
                     //Modify the current task with the new entries
 
 
-                    listener.getTask(position).setEffort(effort);
-                    listener.getTask(position).setUrgency(urgent);
+                    Task t = listener.getTask(position);
+                    t.setEffort(effort);
+                    t.setUrgency(urgent);
+
+                    listener.remove(position);
+                    listener.addTask(position,t);
 
                     taskeffort.setText("Effort: " + listener.getTask(position).getEffort());
                     taskurgent.setText("Urgent: "  + listener.getTask(position).getUrgency());
@@ -285,8 +289,8 @@ public class Graph extends Fragment implements MyFragmentListener,CardDetailedFr
 //        iv.setId(index++);
         iv.setId(index);
         int param = llTouchheight / 6;
-        int left = Math.round(x * param);
-        int bottom = Math.round(y * param);
+        int left = Math.round(x * param) -60;
+        int bottom = Math.round(y * param) + 30;
         int top = llTouchheight - bottom;
         int right = llTouchwidth - left;
         Log.d("tst2","left:"  + left + "top:" + top);

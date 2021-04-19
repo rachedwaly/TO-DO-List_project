@@ -262,22 +262,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         effortSlider.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                currentTask.getTags().remove("easy");
-                currentTask.getTags().remove("medium effort");
-                currentTask.getTags().remove("hard");
-
-                if (value == 1 || value == 2) {
-                    currentTask.getTags().add("easy");
-                }
-
-                if (value == 3) {
-                    currentTask.getTags().add("medium effort");
-                }
-
-                if (value == 4 || value == 5) {
-                    currentTask.getTags().add("hard");
-                }
-
+                currentTask.setEffort((int)value);
                 changeChipVisibility();
             }
         });
@@ -286,27 +271,7 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
         urgencySlider.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                currentTask.getTags().remove("not urgent");
-                currentTask.getTags().remove("low urgency");
-                currentTask.getTags().remove("medium urgency");
-                currentTask.getTags().remove("urgent");
-
-                if (value == 1) {
-                    currentTask.getTags().add("not urgent");
-                }
-
-                if (value == 2) {
-                    currentTask.getTags().add("low urgency");
-                }
-
-                if (value == 3) {
-                    currentTask.getTags().add("medium urgency");
-                }
-
-                if (value == 4 || value == 5) {
-                    currentTask.getTags().add("urgent");
-                }
-
+                currentTask.setUrgency((int) value);
                 changeChipVisibility();
             }
         });
@@ -511,8 +476,6 @@ public class CreateActivity extends AppCompatActivity implements TagsPickerFragm
             currentTask.setRepeater(selectedRepeater);
             currentTask.setDueTime(dueTime.getText().toString());
             currentTask.setDescription(description.getText().toString());
-            currentTask.setEffort((int) effortSlider.getValue());
-            currentTask.setUrgency((int) urgencySlider.getValue());
             currentTask.setCalendar(calendar.isChecked());
 
             // Send back the task
